@@ -181,7 +181,7 @@
 	$.interaction.register('form', function(context) {
 		var result = '';
 		$.ajax(context.action, {
-			method: context.method,
+			type: context.method,
 			data: context.query,
 			dataType: 'HTML',
 			cache: false,
@@ -218,7 +218,7 @@
 			open: function() {
 				var container = $(this);
 				$.ajax(context.action, {
-					method: context.method,
+					type: context.method,
 					data: context.query,
 					dataType: 'HTML',
 					cache: false,
