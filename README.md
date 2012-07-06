@@ -4,6 +4,8 @@ Interaction Lib (1.0.0 Documentation)
 by Mark Nelson, Dave Reed, Thomas Dupont
 
 This is a jQuery plugin library designed to support easy wiring for common ajax and UI interactions.
+For code samples and additional documentation please [visit my blog](http://markernet.blogspot.com/2012/02/interactionlib-sample-code.html).
+(Never fear! There will be more code samples! I promise!)
 
 Requirements:
 -------------
@@ -13,7 +15,7 @@ Requirements:
 
 What it does:
 -------------
-* At its core it allows you to send an ajax request to the server and post the results on your page or in a modal dialog completely configured in your markup via a minimal amount of data attributes (no java needed).
+* At its core it allows you to send an ajax request to the server and post the results on your page or in a modal dialog completely configured in your markup via a minimal amount of data attributes (no javascript needed).
 * Can facilitate the wiring of other jquery plugins directly from your markup, also with a minimal amount of attributes.
 * Greatly decreases the amount of time it takes to produce interactive pages.
 * Greatly decreases the amount of maintenance required for interactive pages.
@@ -23,13 +25,13 @@ The data-ajaxform attributes and what they do:
 * data-ajaxform-action
     * Sets the server URL for the interaction.
     * Can be placed directly on an event-element or a containing element.
-    * The URL can contain configuration parameters or the action-element can contain inputs and work in much the same way a regular <form> would.
+    * The URL can contain configuration parameters or the action-element can contain inputs and work in much the same way a regular `<form>` would.
 * data-ajaxform-method (optional)
     * Can be set to GET or POST.
     * Defaults to POST
 * data-ajaxform-events
     * Sets the element to be an event-element that will trigger the interaction.
-    * Can be placed directly on an action-element or contained within an action-element to work much like a submit button or control would in a regular <form>
+    * Can be placed directly on an action-element or contained within an action-element to work much like a submit button or control would in a regular `<form>`
     * Supports "click", "change", "keyup", and a custom event "enterkey".
     * Can be extended to support additional proper and/or custom events.
 * data-ajaxform-target (optional)
@@ -77,7 +79,7 @@ The data-ajaxform attributes and what they do:
 The data-interaction attributes and what they do
 ------------------------------------------------
 * data-interaction
-    * Executes the jQuery plug-in on the element
+    * Executes the jQuery plugin on the element
     * Example: data-interaction="datepicker" is the same as $('selector').datepicker();
 * data-configuration-x (optional)
     * Sets the configuration value 'x' when wiring the element to the plugin
@@ -109,4 +111,3 @@ The ajaxform events/triggers
     * Causes the interaction to occur when the input's value is considered to be changed
 * enterkey
     * Causes the interaction to occur when the input receives a key stroke from the enter key
-
