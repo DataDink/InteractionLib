@@ -104,7 +104,7 @@
                 confirmCancel: configuration.confirmCancel || element.data('ajaxconfirm-cancel') || form.data('ajaxconfirm-cancel') || 'Cancel', // Optionally set the confirmation cancel button text
 
                 onError: function (response) {
-                    $.interaction.logerror('interaction error', error);
+                    $.interaction.logerror('interaction error', response);
                     element.trigger('ajaxform-error', response);
                 },
                 onSuccess: function (response) {
@@ -191,7 +191,7 @@
             },
             error: function (ex, type, message) {
                 result = { ex: ex, type: type, message: message };
-                context.onError(message);
+                context.onError(!!ex ? ex.responseText : message);
             },
             complete: function () {
                 context.onComplete(result);
@@ -234,8 +234,8 @@
                     },
                     error: function (ex, type, message) {
                         result = { ex: ex, type: type, message: message };
-                        context.onError(message);
-                        container.html(message);
+                        context.onError(!!ex ? ex.responseText : message);
+                        container.html(!!ex ? ex.responseText : message);
                     },
                     complete: function () {
                         dlg.find('.java-interaction-overlay').remove();
