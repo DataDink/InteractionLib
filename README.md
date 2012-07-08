@@ -3,7 +3,7 @@ Interaction Lib (1.0.0 Documentation)
 
 by Mark Nelson, Dave Reed, Thomas Dupont
 
-This is a jQuery plugin library designed to support easy wiring for common ajax and UI interactions.
+This is a jQuery plugin library that provides wiring for common ajax and UI interactions.
 For code samples and additional documentation please [visit my blog](http://markernet.blogspot.com/2012/02/interactionlib-sample-code.html).
 (Never fear! There will be more code samples! I promise!)
 
