@@ -367,7 +367,8 @@ $(function () {
                             var match = expression.exec(casing);
                             key = !!(match) ? match[0] : key;
                         }
-                        configuration[key] = attr.nodeValue;
+						var numeric = parseFloat(attr.nodeValue);
+                        configuration[key] = (numeric || attr.nodeValue.indexOf('0') === 0) ? numeric : attr.nodeValue;
                     }
                 });
                 if (hasConfiguration) {
