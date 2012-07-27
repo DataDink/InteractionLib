@@ -289,8 +289,9 @@
 
                 request.onload = function (e) { // Handle XHR responses
                     response = e.target.response;
+                    var status = e.target.status;
                     try { request.abort(); } catch (ex) { }
-                    if (e.target.status === 200) {
+                    if (status === 200) {
                         context.onSuccess(response);
                     } else {
                         context.onError(response);
