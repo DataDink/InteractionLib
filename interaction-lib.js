@@ -6,8 +6,8 @@
 //  Provides common ui interactions based on element behavior mappings.
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Documentation: http://markernet.blogspot.com/2012/02/interaction-lib-10-documentation.html
-// Samples:       http://markernet.blogspot.com/2012/02/interactionlib-sample-code.html
+// Documentation: http://www.markonthenet.com/interactionlib/#documentation.htm
+// Samples:       http://www.markonthenet.com/interactionlib/#../Demos/IntLib
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
