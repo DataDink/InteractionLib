@@ -1,6 +1,6 @@
 ﻿
 ///////////////////////////////////////////////////////////////////////////////////////////////
-//  Interaction Lib v1.0.1
+//  Interaction Lib v1.0.4
 //  By Mark Nelson, Dave Reed, Thomas Dupont
 //
 //  Provides common ui interactions based on element behavior mappings.
