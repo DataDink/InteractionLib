@@ -161,6 +161,9 @@
         });
         return $(this);
     };
+	
+	// Suppresses form submissions marked with ajaxform attributes.
+	$('form[data-ajaxform-action]').live('submit.interaction', function(e) { e.preventDefault(); });
 
     // data-ajaxform wire-ups (add new event support here)
     $('[data-ajaxform-events~=click]').live('click.interaction', function () { $(this).interaction(); });
