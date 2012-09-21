@@ -78,7 +78,7 @@
     // Will be auto-wired below, but can optionally be called on an element with custom configuration.
     // $('selector').interaction({action: 'something', mode: 'something'});
     $.fn.interaction = function (configuration) {
-        $(this).each(function () {
+        return $(this).each(function () {
             var successState = false;
             configuration = configuration || {};
             var element = $(this);
@@ -120,7 +120,7 @@
                 element.trigger('ajaxform-complete', response);
             };
 
-            var doInteraction = function () {
+            var doInteraction = function () { // Setup the ajax interaction
                 element.trigger('ajaxform-preprocess');
                 try {
                     registrations[context.mode](context);
@@ -130,7 +130,7 @@
                 }
             };
 
-            if (context.confirmMessage) {
+            if (context.confirmMessage && $.fn.dialog) { // if confirmation, then ask the user before continuing (this part needs jQueryUI)
                 var buttons = {};
                 buttons[context.confirmContinue] = function () {
                     $(this).dialog('close');
@@ -162,20 +162,20 @@
         return $(this);
     };
 	
-	// Suppresses form submissions marked with ajaxform attributes.
+	// Suppresses default submission behaviors for unobtrusive override interactions.
 	$('form[data-ajaxform-action]').live('submit.interaction', function(e) { e.preventDefault(); });
-
-    // data-ajaxform wire-ups (add new event support here)
-    $('[data-ajaxform-events~=click]').live('click.interaction', function () { $(this).interaction(); });
-    $('[data-ajaxform-events~=change]').live('change.interaction', function () { $(this).interaction(); });
-    $('[data-ajaxform-events~=keyup]').live('keyup.interaction', function () { $(this).interaction(); });
+	$('a[data-ajaxform-action]').live('click.interaction', function(e) { e.preventDefault(); });
+	
+	// Basic event support for ajaxform wirings
+	$.each(['click', 'change', 'keyup', 'keydown', 'keypress', 'dblclick', 'blur', 'focus', 'hover', 'focusin', 'focusout', 'load', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'ready', 'resize', 'scroll', 'select', 'toggle', 'unload'], 
+	function(event) { $('[data-ajaxform-events~=' + event + ']').live(event + '.interaction', function () { $(this).interaction(); }); });
+	
+    // data-ajaxform custom event wire-ups (add new event support here)
+    $('[data-ajaxform-events~=submit], [data-ajaxform-action]').live('submit.interaction', function () { $(this).interaction(); });
     $('[data-ajaxform-events~=enterkey]').live('keyup.interaction', function (event) {
-        if (!event || event.type !== 'keyup' || event.keyCode !== 13) {
-            return;
-        }
+        if (!event || event.type !== 'keyup' || event.keyCode !== 13) { return; } // Fires event only if the key was the enter key
         $(this).interaction();
     });
-
 })(jQuery);
 
 // Interactions (add new interaction support here)
@@ -358,6 +358,9 @@ $(function () {
                 return (!!name && !configured[name]);
             });
             $.each(interactions, function (index, name) {
+				if (!$.fn[name]) { 
+					$.interaction.logerror('Plugin Not Found', 'InteractionLib could not find the requested plugin.', name);
+				}
                 configured[name] = true;
                 var configuration = {};
                 var hasConfiguration = false;
