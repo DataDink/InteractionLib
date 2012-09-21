@@ -168,7 +168,7 @@
 	
 	// Basic event support for ajaxform wirings
 	$.each(['click', 'change', 'keyup', 'keydown', 'keypress', 'dblclick', 'blur', 'focus', 'hover', 'focusin', 'focusout', 'load', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'ready', 'resize', 'scroll', 'select', 'toggle', 'unload'], 
-	function(event) { $('[data-ajaxform-events~=' + event + ']').live(event + '.interaction', function () { $(this).interaction(); }); });
+	function(index, event) { $('[data-ajaxform-events~=' + event + ']').live(event + '.interaction', function () { $(this).interaction(); }); });
 	
     // data-ajaxform custom event wire-ups (add new event support here)
     $('[data-ajaxform-events~=submit], [data-ajaxform-action]').live('submit.interaction', function () { $(this).interaction(); });
