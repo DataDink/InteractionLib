@@ -248,6 +248,11 @@
             }
         });
     });
+    // Page Redirect
+    $.interaction.register('page', function(context) {
+        var url = context.action + '?' + $.param(context.query, true);
+        window.location = url;
+    });
     // Async upload
     function doAjaxUpload(context, isMultiFile) {
         var response = '';
