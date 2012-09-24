@@ -1,4 +1,4 @@
-Interaction Lib (1.2.1)
+Interaction Lib (1.2.1.1)
 =====================================
 
 by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop), [Thomas Dupont](http://www.tomdupont.net/)
