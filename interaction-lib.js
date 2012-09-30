@@ -1,6 +1,6 @@
 ﻿
 ///////////////////////////////////////////////////////////////////////////////////////////////
-//  Interaction Lib v1.2.1.1
+//  Interaction Lib v1.3
 //  By Mark Nelson, Dave Reed, Thomas Dupont
 //
 //  Provides common ui interactions based on element behavior mappings.
@@ -79,6 +79,7 @@
     // $('selector').interaction({action: 'something', mode: 'something'});
     $.fn.interaction = function (configuration) {
         return $(this).each(function () {
+            if ($(this).attr('disabled')) { return; }
             var successState = false;
             configuration = configuration || {};
             var element = $(this);
@@ -141,13 +142,7 @@
                 };
                 var dlg = $('<div>' + context.confirmMessage + '</div>');
                 dlg.dialog({
-                    modal: true,
-                    title: context.confirmTitle || '',
-                    resizable: false,
-                    draggable: false,
-                    width: context.dialogWidth,
-                    height: context.dialogHeight,
-                    closeText: 'X',
+                    modal: true, title: context.confirmTitle || '', resizable: false, draggable: false, width: context.dialogWidth, height: context.dialogHeight, closeText: 'X',
                     buttons: buttons,
                     close: function () {
                         $(this).dialog('destroy');
@@ -159,17 +154,16 @@
                 doInteraction();
             }
         });
-        return $(this);
     };
-	
-	// Suppresses default submission behaviors for unobtrusive override interactions.
-	$('form[data-ajaxform-action]').live('submit.interaction', function(e) { e.preventDefault(); });
-	$('a[data-ajaxform-action]').live('click.interaction', function(e) { e.preventDefault(); });
-	
-	// Basic event support for ajaxform wirings
-	$.each(['click', 'change', 'keyup', 'keydown', 'keypress', 'dblclick', 'blur', 'focus', 'hover', 'focusin', 'focusout', 'load', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'ready', 'resize', 'scroll', 'select', 'toggle', 'unload'], 
-	function(index, event) { $('[data-ajaxform-events~=' + event + ']').live(event + '.interaction', function () { $(this).interaction(); }); });
-	
+
+    // Suppresses default submission behaviors for unobtrusive override interactions.
+    $('form[data-ajaxform-action]').live('submit.interaction', function (e) { e.preventDefault(); });
+    $('a[data-ajaxform-action]').live('click.interaction', function (e) { e.preventDefault(); });
+
+    // Basic event support for ajaxform wirings
+    $.each(['click', 'change', 'keyup', 'keydown', 'keypress', 'dblclick', 'blur', 'focus', 'hover', 'focusin', 'focusout', 'load', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'ready', 'resize', 'scroll', 'select', 'toggle', 'unload'],
+	function (index, event) { $('[data-ajaxform-events~=' + event + ']').live(event + '.interaction', function () { $(this).interaction(); }); });
+
     // data-ajaxform custom event wire-ups (add new event support here)
     $('[data-ajaxform-events~=submit], [data-ajaxform-action]').live('submit.interaction', function () { $(this).interaction(); });
     $('[data-ajaxform-events~=enterkey]').live('keyup.interaction', function (event) {
@@ -184,10 +178,7 @@
     $.interaction.register('form', function (context) {
         var result = '';
         $.ajax(context.action, {
-            type: context.method,
-            data: context.query,
-            dataType: 'HTML',
-            cache: false,
+            type: context.method, data: context.query, dataType: 'HTML', cache: false,
             success: function (html) {
                 context.onSuccess(html);
                 result = html;
@@ -206,13 +197,7 @@
         var result = '';
         var dlg = $('<div><div class="java-interaction-overlay"></div></div>');
         dlg.dialog({
-            modal: true,
-            title: context.dialogTitle || '',
-            resizable: false,
-            draggable: false,
-            width: context.dialogWidth,
-            height: context.dialogHeight,
-            closeText: 'X',
+            modal: true, resizable: false, draggable: false, closeText: 'X', width: context.dialogWidth, height: context.dialogHeight, title: context.dialogTitle || '',
             close: function () {
                 $(this).dialog('destroy');
                 dlg.html('');
@@ -221,10 +206,7 @@
             open: function () {
                 var container = $(this);
                 $.ajax(context.action, {
-                    type: context.method,
-                    data: context.query,
-                    dataType: 'HTML',
-                    cache: false,
+                    type: context.method, data: context.query, cache: false, dataType: 'HTML',
                     success: function (html) {
                         result = html;
                         context.onSuccess(result);
@@ -242,6 +224,9 @@
                     },
                     complete: function () {
                         dlg.find('.java-interaction-overlay').remove();
+                        var dlgContainer = dlg.closest('.ui-dialog');
+                        var top = $(window).height() / 2 - dlgContainer.height() / 2 + $(window).scrollTop();
+                        dlgContainer.css('top', top + 'px');
                         context.onComplete(result);
                     }
                 });
@@ -250,8 +235,19 @@
     });
     // Page Redirect
     $.interaction.register('page', function(context) {
-        var url = context.action + '?' + $.param(context.query, true);
-        window.location = url;
+        if (context.method.toLowerCase().trim() === 'post') { // Create a hidden 'real' form to submit
+            var form = $('<form>', { css: { display: 'none' }, method: 'POST', action: context.action })
+                .appendTo('body');
+            $.each(context.query, function(name, value) {
+                $('<input type="hidden" name="' + name + '" />')
+                    .appendTo(form)
+                    .val(value);
+            });
+            form.submit();
+        } else { // Append the form parameters to the url and redirect
+            var url = context.action + '?' + $.param(context.query, true);
+            window.location = url;
+        }
     });
     // Async upload
     function doAjaxUpload(context, isMultiFile) {
@@ -363,9 +359,7 @@ $(function () {
                 return (!!name && !configured[name]);
             });
             $.each(interactions, function (index, name) {
-				if (!$.fn[name]) { 
-					$.interaction.logerror('Plugin Not Found', 'InteractionLib could not find the requested plugin.', name);
-				}
+                if (!$.fn[name]) { $.interaction.logerror('Plugin Not Found', 'InteractionLib could not find the requested plugin.', name); }
                 configured[name] = true;
                 var configuration = {};
                 var hasConfiguration = false;
@@ -379,7 +373,7 @@ $(function () {
                             var match = expression.exec(casing);
                             key = !!(match) ? match[0] : key;
                         }
-						var numeric = parseFloat(attr.nodeValue);
+                        var numeric = parseFloat(attr.nodeValue);
                         configuration[key] = (numeric || attr.nodeValue.indexOf('0') === 0) ? numeric : attr.nodeValue;
                     }
                 });
