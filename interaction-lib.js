@@ -272,7 +272,7 @@
             context.query.uploadIsXhrCompat = true;
             var url = context.action + ((context.action.indexOf('?') > 0) ? '&' : '?') + $.param(context.query);
             // Wrap file control in an invisible container
-            $('#' + INTERACTIONUPLOADWRAPPER).remove();
+            $(INTERACTIONUPLOADWRAPPER).remove();
             var container = $('<div>', { style: 'overflow: hidden !important; display: inline-block !important; width: 0px !important; height: 0px !important; padding: 0px !important; margin: 0px !important; border: none !important;', id: INTERACTIONUPLOADWRAPPER }).insertAfter(context.element);
             container.html(file);
             submit = function () {
@@ -310,7 +310,7 @@
             context.query.uploadIsXhrCompat = false;
             var url = context.action + ((context.action.indexOf('?') > 0) ? '&' : '?') + $.param(context.query);
             // Wrap file control in an invisible iframe with form
-            $('#' + INTERACTIONUPLOADWRAPPER).remove();
+            $(INTERACTIONUPLOADWRAPPER).remove();
             var frame = $('<iframe>', { style: 'overflow: hidden !important; display: inline-block !important; width: 0px !important; height: 0px !important; padding: 0px !important; margin: 0px !important; border: none !important;', id: INTERACTIONUPLOADWRAPPER }).insertAfter(context.element);
             frame.one('load', function () { // When the frame is 'ready' add the hidden form
                 var uploadBody = $(frame[0].contentDocument.body);
