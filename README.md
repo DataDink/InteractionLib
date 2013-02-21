@@ -1,4 +1,4 @@
-Interaction Lib (1.3)
+Interaction Lib (1.4)
 =====================================
 
 by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop), [Thomas Dupont](http://www.tomdupont.net/)
@@ -19,3 +19,7 @@ What it does:
 * At its core it allows you to send an ajax request to the server and post the results on your page or in a modal dialog completely configured in your markup via a minimal amount of data attributes (no javascript needed).
 * Greatly decreases the amount of time it takes to produce interactive pages.
 * Greatly decreases the amount of maintenance required for interactive pages.
+
+Change Log
+==========
+1.4 : Transitioned to .on from .live to be compliant with jquery 1.9.1+

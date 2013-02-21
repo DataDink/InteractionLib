@@ -1,6 +1,6 @@
 ﻿
 ///////////////////////////////////////////////////////////////////////////////////////////////
-//  Interaction Lib v1.3
+//  Interaction Lib v1.4
 //  By Mark Nelson, Dave Reed, Thomas Dupont
 //
 //  Provides common ui interactions based on element behavior mappings.
@@ -157,16 +157,16 @@
     };
 
     // Suppresses default submission behaviors for unobtrusive override interactions.
-    $('form[data-ajaxform-action]').live('submit.interaction', function (e) { e.preventDefault(); });
-    $('a[data-ajaxform-action]').live('click.interaction', function (e) { e.preventDefault(); });
+    $('html').on('submit', 'form[data-ajaxform-action]', function (e) { e.preventDefault(); });
+    $('html').on('click', 'a[data-ajaxform-action]', function (e) { e.preventDefault(); });
 
     // Basic event support for ajaxform wirings
     $.each(['click', 'change', 'keyup', 'keydown', 'keypress', 'dblclick', 'blur', 'focus', 'hover', 'focusin', 'focusout', 'load', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'ready', 'resize', 'scroll', 'select', 'toggle', 'unload'],
-	function (index, event) { $('[data-ajaxform-events~=' + event + ']').live(event + '.interaction', function () { $(this).interaction(); }); });
+	function (index, event) { $('html').on(event + '', '[data-ajaxform-events~=' + event + ']', function () { $(this).interaction(); }); });
 
     // data-ajaxform custom event wire-ups (add new event support here)
-    $('[data-ajaxform-events~=submit], [data-ajaxform-action]').live('submit.interaction', function () { $(this).interaction(); });
-    $('[data-ajaxform-events~=enterkey]').live('keyup.interaction', function (event) {
+    $('html').on('submit', '[data-ajaxform-events~=submit], [data-ajaxform-action]', function () { $(this).interaction(); });
+    $('html').on('keyup', '[data-ajaxform-events~=enterkey]', function (event) {
         if (!event || event.type !== 'keyup' || event.keyCode !== 13) { return; } // Fires event only if the key was the enter key
         $(this).interaction();
     });
