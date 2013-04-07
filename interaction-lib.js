@@ -71,7 +71,9 @@
             if (window.console && window.console.log) {
                 window.console.log((title || '') + " : " + (message || '') + ":" + (info || ''));
             }
-        }
+        },
+
+        parseResponse: function (response) { return $.parseHTML(response.replace(/^\s+|\s+$/g, '')); }
     };
 
     // The interaction plugin:
@@ -115,9 +117,10 @@
             };
 
             context.onComplete = function (response) {
-                if (successState && response && context.target) { $(context.target).html(response); };
-                if (successState && response && context.append) { $(response).appendTo(context.append); };
-                if (successState && response && context.prepend) { $(response).prependTo(context.prepend); };
+                var content = $.interaction.parseResponse(response);
+                if (successState && response && context.target) { $(context.target).html(content); };
+                if (successState && response && context.append) { $(content).appendTo(context.append); };
+                if (successState && response && context.prepend) { $(content).prependTo(context.prepend); };
                 element.trigger('ajaxform-complete', response);
             };
 
@@ -210,7 +213,7 @@
                     success: function (html) {
                         result = html;
                         context.onSuccess(result);
-                        container.html(html);
+                        container.html($.interaction.parseResponse(html));
                         if (context.dialogCancel) {
                             dlg.find(context.dialogCancel).click(function () {
                                 dlg.dialog('close');
@@ -220,7 +223,7 @@
                     error: function (ex, type, message) {
                         result = { ex: ex, type: type, message: message };
                         context.onError(!!ex ? ex.responseText : message);
-                        container.html(!!ex ? ex.responseText : message);
+                        container.html($.interaction.parseResponse(!!ex ? ex.responseText : message));
                     },
                     complete: function () {
                         dlg.find('.java-interaction-overlay').remove();
@@ -272,7 +275,7 @@
             context.query.uploadIsXhrCompat = true;
             var url = context.action + ((context.action.indexOf('?') > 0) ? '&' : '?') + $.param(context.query);
             // Wrap file control in an invisible container
-            $(INTERACTIONUPLOADWRAPPER).remove();
+            $('#' + INTERACTIONUPLOADWRAPPER).remove();
             var container = $('<div>', { style: 'overflow: hidden !important; display: inline-block !important; width: 0px !important; height: 0px !important; padding: 0px !important; margin: 0px !important; border: none !important;', id: INTERACTIONUPLOADWRAPPER }).insertAfter(context.element);
             container.html(file);
             submit = function () {
@@ -310,7 +313,7 @@
             context.query.uploadIsXhrCompat = false;
             var url = context.action + ((context.action.indexOf('?') > 0) ? '&' : '?') + $.param(context.query);
             // Wrap file control in an invisible iframe with form
-            $(INTERACTIONUPLOADWRAPPER).remove();
+            $('#' + INTERACTIONUPLOADWRAPPER).remove();
             var frame = $('<iframe>', { style: 'overflow: hidden !important; display: inline-block !important; width: 0px !important; height: 0px !important; padding: 0px !important; margin: 0px !important; border: none !important;', id: INTERACTIONUPLOADWRAPPER }).insertAfter(context.element);
             frame.one('load', function () { // When the frame is 'ready' add the hidden form
                 var uploadBody = $(frame[0].contentDocument.body);
