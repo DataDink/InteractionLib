@@ -73,7 +73,9 @@
             }
         },
 
-        parseResponse: function (response) { return $.parseHTML((response || '').replace(/^\s+|\s+$/g, '')); }
+        parseResponse: function(response) {
+             return (typeof response) == 'string' ? $.parseHTML((response || '').replace(/^\s+|\s+$/g, '')) : response;
+        }
     };
 
     // The interaction plugin:
