@@ -3,7 +3,7 @@ Interaction Lib (1.4)
 
 by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop), [Thomas Dupont](http://www.tomdupont.net/)
 
-Demos and Documentation: [Here](http://www.markonthenet.com/interactionlib)
+Demos and Documentation: [Here](http://datadink.github.io/InteractionLib/)
 
 This is a jQuery plugin library that provides markup-wiring for common ajax and UI interactions.
 
