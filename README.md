@@ -1,5 +1,8 @@
-Interaction Lib (1.4)
+Interaction Lib (1.4) ::OBSOLETE::
 =====================================
+
+THIS PROJECT IS OBSOLETE!
+The replacement for this is coming soon.
 
 by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop), [Thomas Dupont](http://www.tomdupont.net/)
 
