@@ -5,10 +5,15 @@
 	</head>
 	<body>
 		<form action="Request.html"
-			  data-behavior="ajax-form">
+			  data-behavior="ajax-form"
+			  target="#target">
 			<input type="text" name="value1" />
 			<input type="checkbox" name="value2" />
 			<button type="submit">Send</button>
 		</form>
+		<div id="target"
+			 data-behavior="ajax-frame"
+			 data-ajax-mode="prepend">
+		</div>
 	</body>
 </html>

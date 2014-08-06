@@ -5,14 +5,28 @@
 			submitSuccess: 'ajax-success',
 			submitFailure: 'ajax-failure',
 			afterSubmit: 'ajax-after',
-			triggerSubmit: 'ajax-submit',
+			triggerSubmit: 'ajax-submit'
+		},
+		attributes: {
+			formAction: 'data-action',
+			formMethod: 'data-method',
+			formTarget: 'data-target',
+			
+			frameListen: 'data-ajax-listen',
+			frameTarget: 'data-ajax-target',
+			frameMode: 'data-ajax-mode'
+		},
+		modes: {
+			replaceContent: 'FILL',
+			appendContent: 'APPEND',
+			prependContent: 'PREPEND'
 		}
 	}
 	
 	/**************************** Helpers **************************/
-	function sendEvent(element, name, detail) {
+	function sendEvent(elementCollection, name, detail) {
 		var evt = new CustomEvent(name, { bubbles: true, detail: detail });
-		element.dispatchEvent(evt);
+		for (var i = 0; i < elementCollection.length; i++) { elementCollection[i].dispatchEvent(evt); }
 	}
 	
 	/**************************** ajax-form ***************************/
@@ -57,28 +71,30 @@
 	function submithandler(e) {
 		if (e.preventDefault) { e.preventDefault(); }
 		var form = this;
-		var action = form.getAttribute('action') || form.getAttribute('data-action');
-		var method = (form.getAttribute('method') || form.getAttribute('data-method') || 'POST').toUpperCase();
+		var action = form.getAttribute('action') || form.getAttribute(settings.attributes.formAction);
+		var method = (form.getAttribute('method') || form.getAttribute(settings.attributes.formMethod) || 'POST').toUpperCase();
+		var targetSelector = form.getAttribute('target') || form.getAttribute(settings.attributes.formTarget);
+		var targets = (!targetSelector) ? [form] : document.querySelectorAll(targetSelector);
 		var query = formatQuery(serializeForm(form));
 		var request = (!window.XMLHttpRequest) ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
 		request.onreadystatechange = (function(response) { return function() {
 			if (response.readyState !== 4) { return; }
 			if (response.status >= 500 && response.status < 600) {
-				sendEvent(form, settings.events.submitFailure, {
+				sendEvent(targets, settings.events.submitFailure, {
 					form: form, action: action, query: query, method: method,
 					status: response.status,
 					type: response.responseType,
 					response: response.responseText
 				});
 			} else {
-				sendEvent(form, settings.events.submitSuccess, {
+				sendEvent(targets, settings.events.submitSuccess, {
 					form: form, action: action, query: query, method: method,
 					status: response.status,
 					type: response.responseType,
 					response: response.responseText
 				});
 			}
-			sendEvent(form, settings.events.afterSubmit, {
+			sendEvent(targets, settings.events.afterSubmit, {
 				form: form, action: action, query: query, method: method,
 				status: response.status,
 				type: response.responseType,
@@ -98,7 +114,7 @@
 		};
 		
 		var presubmit = { form: form, action: action, query: query, method: method, cancel: false, resubmit: send };
-		sendEvent(form, settings.events.beforeSubmit, presubmit);
+		sendEvent(targets, settings.events.beforeSubmit, presubmit);
 		if (presubmit.cancel) { return; }
 		
 		send();
@@ -109,4 +125,72 @@
 		this.addEventListener('ajax-submit', submithandler, false);
 	});
 	
+	/**************************** ajax-frame ***************************/
+	function HtmlParse(raw) {
+		var container = document.createElement('div');
+		container.innerHTML = raw; /* TODO: Research better parsing options */
+		return container;
+	}
+	
+	function ClearChildren(node) {
+		while (node.firstChild) { node.removeChild(node.firstChild); }
+	}
+	
+	window.behaviors.add('ajax-frame', function() {
+		var coordinator = this;
+		var sourceSelector = coordinator.getAttribute(settings.attributes.frameListen);
+		var sources = (!sourceSelector) ? [coordinator] : document.querySelectorAll(sourceSelector);
+		var targetSelector = coordinator.getAttribute(settings.attributes.frameTarget);
+		var targets = (!targetSelector) ? [coordinator] : document.querySelectorAll(targetSelector);
+		var method = (coordinator.getAttribute(settings.attributes.frameMode) || settings.modes.replaceContent).toUpperCase();
+		
+		var render = (function(targets, method) { return function(e) {
+			var html = new HtmlParse(e.detail.response);
+			for (var t = 0; t < targets.length; t++) {
+				var content = html.cloneNode(true);
+				if (method === settings.modes.appendContent) { targets[t].appendChild(content); }
+				if (method === settings.modes.prependContent) { targets[t].insertBefore(content, targets[t].firstChild); }
+				if (method === settings.modes.replaceContent) { ClearChildren(targets[t]); targets[t].appendChild(content); }
+			}
+		};})(targets, method);
+		
+		for (var s = 0; s < sources.length; s++) {
+			sources[s].addEventListener(settings.events.submitSuccess, render, false);
+		}
+	});
 })(window.behaviors);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
