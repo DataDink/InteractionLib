@@ -15,13 +15,13 @@
 				if (evt.bubbles && this.parentNode) { this.parentNode.dispatchEvent(evt); }
 			};
 			obj.addEventListener = (function(attach) { return function(type, handler, capture) {
-				attach(type, handler, capture);
+				attach.call(this, type, handler, capture);
 				this.customEventHandlers = this.customEventHandlers || {};
 				this.customEventHandlers[type] = this.customEventHandlers[type] || [];
 				this.customEventHandlers[type].push(handler);
 			};})(obj.addEventListener);
 			obj.removeEventListener = (function(detach) { return function(type, handler, capture) {
-				detach(type, handler, capture);
+				detach.call(this, type, handler, capture);
 				if (!this.customEventHandlers || !this.customEventHandlers[type]) { return; }
 				for (var i = this.customEventHandlers[type].length - 1; i >= 0; i--) {
 					if (this.customEventHandlers[type][i] === handler) { 

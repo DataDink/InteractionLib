@@ -105,9 +105,18 @@
 			system.insertBefore.call(this, node, mark);
 			wireContainer(mark);
 		};
-		/* NOTE:	it is possible to use Object.defineProperty or 'onpropertychanged' to detect
-					innerHTML mutations but this would need to be done per DOM element and will
-					not be detected here. This should remain a known limitation */
+		function infect(container) {
+			if (!container.querySelectorAll) { return; }
+			var dom = container.querySelectorAll('*');
+			for (var i = 0; i < dom.length; i++) {
+				dom[i].attachEvent('onpropertychange', function(e) {
+					if (e.propertyName !== 'innerHTML') { return; }
+					infect(this);
+					wireContainer(this);
+				});
+			}
+		}
+		infect(document);
 		return true;
 	}
 	
