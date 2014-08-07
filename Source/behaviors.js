@@ -93,6 +93,7 @@
 	}
 	
 	function useMutationWrap() { /* for IE8 only */
+		if (!window.Element.prototype || !window.Element.prototype.attachEvent) { return false; }
 		var append = window.Element.prototype.appendChild;
 		window.Element.prototype.appendChild = function(node) {
 			append.call(this, node);
