@@ -113,7 +113,7 @@
 			wireContainer(node);
 		}
 		function infestDOM(nodes) { /* TODO: Add a disable for this */
-			nodes = Array.prototype.slice.call(nodes, 0);
+			nodes = toArray(nodes);
 			for (var i = 0; i < countOf(nodes); i++) {
 				var node = nodes[i];
 				node.attachEvent('onpropertychange', function(e) {
