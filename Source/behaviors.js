@@ -7,7 +7,7 @@
 	}
 	
 	/**************************** Behavior Functionality ******************************/
-	var __log = (!console || !console.log) ? function() {} : console.log;
+	var __log = (!window.console || !window.console.log) ? function() {} : window.console.log;
 	var __source = (!window.jQuery) ? {} : window.jQuery.fn;
 	var __wired = false;
 	
@@ -92,31 +92,19 @@
 		return true;
 	}
 	
-	function useMutationWrap() { /* for IE only */
-		var system = {
-			appendChild: window.Element.prototype.appendChild,
-			insertBefore: window.Element.prototype.insertBefore
-		};
-		window.Element.prototype.appendChild = function(node) {
-			system.appendChild.call(this, node);
-			wireContainer(node);
-		};
-		window.Element.prototype.insertBefore = function(node, mark) {
-			system.insertBefore.call(this, node, mark);
-			wireContainer(mark);
-		};
-		function infect(container) {
+	function useMutationWrap() { /* for IE8 only */
+		function infestDOM(container) { /* TODO: Add a disable for this */
 			if (!container.querySelectorAll) { return; }
 			var dom = container.querySelectorAll('*');
 			for (var i = 0; i < dom.length; i++) {
 				dom[i].attachEvent('onpropertychange', function(e) {
 					if (e.propertyName !== 'innerHTML') { return; }
-					infect(this);
-					wireContainer(this);
+					infestDOM(e.srcElement);
+					wireContainer(e.srcElement);
 				});
 			}
 		}
-		infect(document);
+		infestDOM(document);
 		return true;
 	}
 	

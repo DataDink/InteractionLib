@@ -5,16 +5,10 @@
 		<script src="../../Source/ajax.js" type="text/javascript"></script>
 	</head>
 	<body>
-		<div data-behavior="test">Click</div>
+		<div></div>
+
+		<div><div><div><div><div><div><div><div></div></div></div></div></div></div></div></div>
 	</body>
 	<script>
-		(function() {
-			window.behaviors.add('test', function() {
-				this.attachEvent('onclick', function(e) {
-					document.body.firstChild.innerHTML = '<div data-behavior="test">click</div>';
-				});
-				alert('test');
-			});
-		})();
 	</script>
 </html>

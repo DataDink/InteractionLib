@@ -1,4 +1,6 @@
 (function() {
+	function clone(obj) { var dupe = {}; for (var p in obj) { dupe[p] = obj[p]; } return dupe; }
+	
 	function setEventingPolyfills(obj) {
 		obj.addEventListener = obj.addEventListener || function(name, handler) { this.attachEvent('on' + name, handler); };
 		obj.removeEventListener = obj.removeEventListener || function(name, handler) { this.detachEvent('on' + name, handler); };
@@ -10,6 +12,8 @@
 	function setDispatchPolyfills(obj) { /* this is IE8 only */
 		if (!obj.dispatchEvent) {
 			obj.dispatchEvent = function(evt) {
+				if (!evt.target) { evt = clone(evt); evt.target = this; }
+				evt.currentTarget = this;
 				var handlers = (this.customEventHandlers || {})[evt.type] || [];
 				for (var i = 0; i < handlers.length; i++) { handlers[i].call(this, evt); }
 				if (evt.bubbles && this.parentNode) { this.parentNode.dispatchEvent(evt); }
