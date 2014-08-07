@@ -1,8 +1,39 @@
 <html>
 	<head>
-		<script src="interaction-lib.js" type="text/javascript"></script>
+		<script src="../Source/eventing.js" type="text/javascript"></script>
+		<script src="../Source/behaviors.js" type="text/javascript"></script>
+		<script src="../Source/ajax.js" type="text/javascript"></script>
 	</head>
 	<body>
+	
+		<form action="AjaxResponse.html"
+			  data-behavior="ajax-form"
+			  target="#target-frame">
+			<button type="submit">Click</button>  
+		</form>
+		
+		<div data-behavior="ajax-frame"
+			 data-ajax-mode="append"
+			 id="target-frame">
+			<span>Content to be appended here</span>
+		</div>
+		
+		<div data-behavior="ajax-frame"
+			 data-ajax-listen="#target-frame"
+			 data-ajax-mode="prepend">
+			<span>Content to be prepended here</span>
+		</div>
+		
+		<div data-behavior="ajax-frame"
+			 data-ajax-listen="#target-frame"
+			 data-ajax-target=".multi-target"
+			 data-ajax-mode="fill">
+			Nothing will happen to my content
+		</div>
+		
+		<div class="multi-target">Content to replace this</div>
+		<div class="multi-target">Content to replace this</div>
+		<div class="multi-target">Content to replace this</div>
 		
 	</body>
 </html>

@@ -136,6 +136,15 @@
 		while (node.firstChild) { node.removeChild(node.firstChild); }
 	}
 	
+	function AppendContent(from, to) {
+		while (from.firstChild) { to.appendChild(from.firstChild); }
+	}
+	
+	function PrependContent(from, to) {
+		var mark = to.firstChild;
+		while (from.firstChild) { to.insertBefore(from.firstChild, mark); }
+	}
+	
 	window.behaviors.add('ajax-frame', function() {
 		var coordinator = this;
 		var sourceSelector = coordinator.getAttribute(settings.attributes.frameListen);
@@ -148,9 +157,9 @@
 			var html = new HtmlParse(e.detail.response);
 			for (var t = 0; t < targets.length; t++) {
 				var content = html.cloneNode(true);
-				if (method === settings.modes.appendContent) { targets[t].appendChild(content); }
-				if (method === settings.modes.prependContent) { targets[t].insertBefore(content, targets[t].firstChild); }
-				if (method === settings.modes.replaceContent) { ClearChildren(targets[t]); targets[t].appendChild(content); }
+				if (method === settings.modes.appendContent) { AppendContent(content, targets[t]); }
+				if (method === settings.modes.prependContent) { PrependContent(content, targets[t]); }
+				if (method === settings.modes.replaceContent) { ClearChildren(targets[t]); AppendContent(content, targets[t]); }
 			}
 		};})(targets, method);
 		
