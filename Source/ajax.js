@@ -14,7 +14,7 @@
 			
 			frameListen: 'data-ajax-listen',
 			frameTarget: 'data-ajax-target',
-			frameMode: 'data-ajax-mode'
+			frameMode: 'data-ajax-mode',
 			
 			submitListen: 'data-ajax-listen',
 			submitTarget: 'data-ajax-target',

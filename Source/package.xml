@@ -1,0 +1,10 @@
+<package>
+	<file name="eventing.js" />
+	<file name="behaviors.js">
+		<dependency name="eventing.js" />
+	</file>	
+	<file name="ajax.js">
+		<dependency name="eventing.js" />
+		<dependency name="behaviors.js" />
+	</file>
+</package>
