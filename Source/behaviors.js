@@ -93,18 +93,30 @@
 	}
 	
 	function useMutationWrap() { /* for IE8 only */
-		function infestDOM(container) { /* TODO: Add a disable for this */
-			if (!container.querySelectorAll) { return; }
-			var dom = container.querySelectorAll('*');
-			for (var i = 0; i < dom.length; i++) {
-				dom[i].attachEvent('onpropertychange', function(e) {
-					if (e.propertyName !== 'innerHTML') { return; }
-					infestDOM(e.srcElement);
-					wireContainer(e.srcElement);
+		var append = window.Element.prototype.appendChild;
+		window.Element.prototype.appendChild = function(node) {
+			append.call(this, node);
+			infestDOM([node]);
+			wireContainer(node);
+		}
+		var prepend = window.Element.prototype.insertBefore;
+		window.Element.prototype.insertBefore = function(node, mark) {
+			prepend.call(this, node, mark);
+			infestDOM([node]);
+			wireContainer(node);
+		}
+		function infestDOM(nodes) { /* TODO: Add a disable for this */
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				node.attachEvent('onpropertychange', function(e) {
+					var container = e.srcElement || e.target;
+					if (e.propertyName !== 'innerHTML' || !container.childNodes) { return; }
+					infestDOM(container.childNodes);
+					wireContainer(container);
 				});
 			}
 		}
-		infestDOM(document);
+		infestDOM([document]);
 		return true;
 	}
 	
