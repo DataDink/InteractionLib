@@ -1,5 +1,7 @@
 /*eventing.js*/
 (function() {
+	function clone(obj) { var dupe = {}; for (var p in obj) { dupe[p] = obj[p]; } return dupe; }
+	
 	function setEventingPolyfills(obj) {
 		obj.addEventListener = obj.addEventListener || function(name, handler) { this.attachEvent('on' + name, handler); };
 		obj.removeEventListener = obj.removeEventListener || function(name, handler) { this.detachEvent('on' + name, handler); };
@@ -11,18 +13,20 @@
 	function setDispatchPolyfills(obj) { /* this is IE8 only */
 		if (!obj.dispatchEvent) {
 			obj.dispatchEvent = function(evt) {
+				if (!evt.target) { evt = clone(evt); evt.target = this; }
+				evt.currentTarget = this;
 				var handlers = (this.customEventHandlers || {})[evt.type] || [];
 				for (var i = 0; i < handlers.length; i++) { handlers[i].call(this, evt); }
 				if (evt.bubbles && this.parentNode) { this.parentNode.dispatchEvent(evt); }
 			};
 			obj.addEventListener = (function(attach) { return function(type, handler, capture) {
-				attach(type, handler, capture);
+				attach.call(this, type, handler, capture);
 				this.customEventHandlers = this.customEventHandlers || {};
 				this.customEventHandlers[type] = this.customEventHandlers[type] || [];
 				this.customEventHandlers[type].push(handler);
 			};})(obj.addEventListener);
 			obj.removeEventListener = (function(detach) { return function(type, handler, capture) {
-				detach(type, handler, capture);
+				detach.call(this, type, handler, capture);
 				if (!this.customEventHandlers || !this.customEventHandlers[type]) { return; }
 				for (var i = this.customEventHandlers[type].length - 1; i >= 0; i--) {
 					if (this.customEventHandlers[type][i] === handler) { 
@@ -66,7 +70,7 @@
 	}
 	
 	/**************************** Behavior Functionality ******************************/
-	var __log = (!console || !console.log) ? function() {} : console.log;
+	var __log = (!window.console || !window.console.log) ? function() {} : window.console.log;
 	var __source = (!window.jQuery) ? {} : window.jQuery.fn;
 	var __wired = false;
 	
@@ -75,13 +79,18 @@
 		return false;
 	}
 	
+	/* Ensures a collection is an array */
+	function toArray(collection) { return Array.prototype.slice.call(collection, 0); }
+	/* Caches the length to "count" for performance as some collections re-evaluate for each call to .length */
+	function countOf(collection) { collection._cachedCount = collection._cachedCount || collection.length; return collection._cachedCount; } 
+	
 	function findAll(behavior, container) {
 		container = container || window.document.body;
 		var selector = '[' + ((!behavior) ? settings.attributes.behaviors : settings.attributes.behaviors + '~=' + behavior) + ']';
 		var containerMatches = (!behavior) || container.getAttribute('data-behavior').indexOf(new RegExp('\b' + behavior + '\b')) >= 0;
 		var results = (!containerMatches) ? [] : [container];
-		var finds = container.querySelectorAll(selector);
-		for (var i = 0; i < finds.length; i++) { results.push(finds[i]); }
+		var finds = toArray(container.querySelectorAll(selector));
+		for (var i = 0; i < countOf(finds); i++) { results.push(finds[i]); }
 		return results;
 	}
 	
@@ -101,13 +110,13 @@
 	function wireElement(element) {
 		var behaviors = (element.getAttribute(settings.attributes.behaviors) || '').split(/\s+/gi);
 		if (!behaviors[0]) { return false; }
-		for (var i = 0; i < behaviors.length; i++) { wireBehavior(behaviors[i], element); }
+		for (var i = 0; i < countOf(behaviors); i++) { wireBehavior(behaviors[i], element); }
 		return true;
 	}
 	
 	function wireContainer(container, behavior) {
 		var matches = findAll(behavior, container);
-		for (var i = 0; i < matches.length; i++) {
+		for (var i = 0; i < countOf(matches); i++) {
 			if (behavior) { wireBehavior(name, matches[i]); }
 			else { wireElement(matches[i]); }
 		}
@@ -130,10 +139,11 @@
 		if (!window.MutationObserver) { return false; }
 		var observer = new MutationObserver(function(mutations) {
 			if (!mutations || !mutations[0]) { return; }
-			for (var i = 0; i < mutations.length; i++) {
+			for (var i = 0; i < countOf(mutations); i++) {
 				var mutation = mutations[i];
 				if (!mutation.addedNodes || !mutation.addedNodes[0]) { continue; }
-				for (var n = 0; n < mutation.addedNodes.length; n++) { wireContainer(mutation.addedNodes[n]); }
+				var nodes = toArray(mutation.addedNodes);
+				for (var n = 0; n < countOf(nodes); n++) { wireContainer(nodes[n]); }
 			}
 		});
 		observer.observe(window.document.body, { childList: true, subtree: true });
@@ -151,22 +161,33 @@
 		return true;
 	}
 	
-	function useMutationWrap() { /* for IE only */
-		var system = {
-			appendChild: window.Element.prototype.appendChild,
-			insertBefore: window.Element.prototype.insertBefore
-		};
+	function useMutationWrap() { /* for IE8 only */
+		if (!window.Element.prototype || !window.Element.prototype.attachEvent) { return false; }
+		var append = window.Element.prototype.appendChild;
 		window.Element.prototype.appendChild = function(node) {
-			system.appendChild.call(this, node);
+			append.call(this, node);
+			infestDOM([node]);
 			wireContainer(node);
-		};
+		}
+		var prepend = window.Element.prototype.insertBefore;
 		window.Element.prototype.insertBefore = function(node, mark) {
-			system.insertBefore.call(this, node, mark);
-			wireContainer(mark);
-		};
-		/* NOTE:	it is possible to use Object.defineProperty or 'onpropertychanged' to detect
-					innerHTML mutations but this would need to be done per DOM element and will
-					not be detected here. This should remain a known limitation */
+			prepend.call(this, node, mark);
+			infestDOM([node]);
+			wireContainer(node);
+		}
+		function infestDOM(nodes) { /* TODO: Add a disable for this */
+			nodes = toArray(nodes);
+			for (var i = 0; i < countOf(nodes); i++) {
+				var node = nodes[i];
+				node.attachEvent('onpropertychange', function(e) {
+					var container = e.srcElement || e.target;
+					if (e.propertyName !== 'innerHTML' || !container.childNodes) { return; }
+					infestDOM(container.childNodes);
+					wireContainer(container);
+				});
+			}
+		}
+		infestDOM([document]);
 		return true;
 	}
 	
