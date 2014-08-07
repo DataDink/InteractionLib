@@ -15,6 +15,10 @@
 			frameListen: 'data-ajax-listen',
 			frameTarget: 'data-ajax-target',
 			frameMode: 'data-ajax-mode'
+			
+			submitListen: 'data-ajax-listen',
+			submitTarget: 'data-ajax-target',
+			submitEvents: 'data-ajax-events'
 		},
 		modes: {
 			replaceContent: 'FILL',
@@ -165,6 +169,26 @@
 		
 		for (var s = 0; s < sources.length; s++) {
 			sources[s].addEventListener(settings.events.submitSuccess, render, false);
+		}
+	});
+	
+	/**************************** ajax-submit ***************************/
+	window.behaviors.add('ajax-submit', function() {
+		var coordinator = this;
+		var events = (coordinator.getAttribute(settings.attributes.submitEvents) || 'click').split(/\s+/gi);
+		var sourceSelector = coordinator.getAttribute(settings.attributes.submitListen);
+		var sources = (!sourceSelector) ? [coordinator] : document.querySelectorAll(sourceSelector);
+		var targetSelector = coordinator.getAttribute(settings.attributes.submitTarget);
+		var targets = (!targetSelector) ? [coordinator] : document.querySelectorAll(targetSelector);
+		
+		var submit = (function(targets) { return function(e) {
+			sendEvent(targets, settings.events.triggerSubmit, {});
+		};})(targets);
+		
+		for (var s = 0; s < sources.length; s++) {
+			for (var e = 0; e < events.length; e++) {
+				sources[s].addEventListener(events[e], submit, false);
+			}
 		}
 	});
 })(window.behaviors);
