@@ -16,13 +16,18 @@
 		return false;
 	}
 	
+	/* Ensures a collection is an array */
+	function toArray(collection) { return Array.prototype.slice.call(collection, 0); }
+	/* Caches the length to "count" for performance as some collections re-evaluate for each call to .length */
+	function countOf(collection) { collection._cachedCount = collection._cachedCount || collection.length; return collection._cachedCount; } 
+	
 	function findAll(behavior, container) {
 		container = container || window.document.body;
 		var selector = '[' + ((!behavior) ? settings.attributes.behaviors : settings.attributes.behaviors + '~=' + behavior) + ']';
 		var containerMatches = (!behavior) || container.getAttribute('data-behavior').indexOf(new RegExp('\b' + behavior + '\b')) >= 0;
 		var results = (!containerMatches) ? [] : [container];
-		var finds = container.querySelectorAll(selector);
-		for (var i = 0; i < finds.length; i++) { results.push(finds[i]); }
+		var finds = toArray(container.querySelectorAll(selector));
+		for (var i = 0; i < countOf(finds); i++) { results.push(finds[i]); }
 		return results;
 	}
 	
@@ -42,13 +47,13 @@
 	function wireElement(element) {
 		var behaviors = (element.getAttribute(settings.attributes.behaviors) || '').split(/\s+/gi);
 		if (!behaviors[0]) { return false; }
-		for (var i = 0; i < behaviors.length; i++) { wireBehavior(behaviors[i], element); }
+		for (var i = 0; i < countOf(behaviors); i++) { wireBehavior(behaviors[i], element); }
 		return true;
 	}
 	
 	function wireContainer(container, behavior) {
 		var matches = findAll(behavior, container);
-		for (var i = 0; i < matches.length; i++) {
+		for (var i = 0; i < countOf(matches); i++) {
 			if (behavior) { wireBehavior(name, matches[i]); }
 			else { wireElement(matches[i]); }
 		}
@@ -71,10 +76,11 @@
 		if (!window.MutationObserver) { return false; }
 		var observer = new MutationObserver(function(mutations) {
 			if (!mutations || !mutations[0]) { return; }
-			for (var i = 0; i < mutations.length; i++) {
+			for (var i = 0; i < countOf(mutations); i++) {
 				var mutation = mutations[i];
 				if (!mutation.addedNodes || !mutation.addedNodes[0]) { continue; }
-				for (var n = 0; n < mutation.addedNodes.length; n++) { wireContainer(mutation.addedNodes[n]); }
+				var nodes = toArray(mutation.addedNodes);
+				for (var n = 0; n < countOf(nodes); n++) { wireContainer(nodes[n]); }
 			}
 		});
 		observer.observe(window.document.body, { childList: true, subtree: true });
@@ -107,7 +113,8 @@
 			wireContainer(node);
 		}
 		function infestDOM(nodes) { /* TODO: Add a disable for this */
-			for (var i = 0; i < nodes.length; i++) {
+			nodes = Array.prototype.slice.call(nodes, 0);
+			for (var i = 0; i < countOf(nodes); i++) {
 				var node = nodes[i];
 				node.attachEvent('onpropertychange', function(e) {
 					var container = e.srcElement || e.target;
