@@ -1,4 +1,4 @@
-(function($, undefined) {
+(function() {
 	var settings = {
 		events: {
 			beforeSubmit: 'ajax-before',
@@ -191,7 +191,7 @@
 			}
 		}
 	});
-})(window.behaviors);
+})();
 
 
 
