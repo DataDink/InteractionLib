@@ -149,4 +149,4 @@
 		window.document.addEventListener('DOMContentLoaded', onDocumentReady, false);
 		window.addEventListener('load', onDocumentReady, false);
 	}
-})()
+})(); 
