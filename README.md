@@ -2,6 +2,7 @@ Interaction Lib (2.0) ::IN PROGRESS::
 =====================================
 
 NOT PRODUCTION READY!
+
 The restructure of this project is in progress and is still untested/buggy.
 
 by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop)
@@ -25,4 +26,5 @@ What it does:
 Change Log
 ==========
 2.0 : Previous versions retired. Will now be standalone. Redefining purpose of framework.
+
 1.4 : Transitioned to .on from .live to be compliant with jquery 1.9.1+
