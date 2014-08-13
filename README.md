@@ -1,28 +1,28 @@
-Interaction Lib (1.4) ::OBSOLETE::
+Interaction Lib (2.0) ::IN PROGRESS::
 =====================================
 
-THIS PROJECT IS OBSOLETE!
-The replacement for this is coming soon.
+NOT PRODUCTION READY!
+The restructure of this project is in progress and is still untested/buggy.
 
-by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop), [Thomas Dupont](http://www.tomdupont.net/)
+by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop)
 
-Demos and Documentation: [Here](http://datadink.github.io/InteractionLib/)
+Documentation: [Here](http://datadink.github.io/InteractionLib/)
 
-This is a jQuery plugin library that provides markup-wiring for common ajax and UI interactions.
+This is a standalone micro-framework that provides markup-wiring for common ajax and UI interactions.
 
 Requirements:
 -------------
-* jQuery
-* jQueryUI
+* N/A
 
 
 What it does:
 -------------
-* Facilitates the wiring of other jquery plugins directly from your markup, also with a minimal amount of attributes.
-* At its core it allows you to send an ajax request to the server and post the results on your page or in a modal dialog completely configured in your markup via a minimal amount of data attributes (no javascript needed).
+* Provides declaractive wirings for page functionality and interactions through common data attributes.
+* Offers codeless SPA development.
 * Greatly decreases the amount of time it takes to produce interactive pages.
 * Greatly decreases the amount of maintenance required for interactive pages.
 
 Change Log
 ==========
+2.0 : Previous versions retired. Will now be standalone. Redefining purpose of framework.
 1.4 : Transitioned to .on from .live to be compliant with jquery 1.9.1+
