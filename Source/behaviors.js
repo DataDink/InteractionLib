@@ -23,6 +23,7 @@
 	
 	function findAll(behavior, container) {
 		container = container || window.document.body;
+		if (!container || !container.querySelectorAll) { return []; }
 		var selector = '[' + ((!behavior) ? settings.attributes.behaviors : settings.attributes.behaviors + '~=' + behavior) + ']';
 		var containerMatches = (!behavior) || container.getAttribute('data-behavior').indexOf(new RegExp('\b' + behavior + '\b')) >= 0;
 		var results = (!containerMatches) ? [] : [container];
