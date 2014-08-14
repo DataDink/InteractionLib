@@ -17,7 +17,7 @@
 	}
 	
 	/* Ensures a collection is an array */
-	function toArray(collection) { return Array.prototype.slice.call(collection, 0); }
+	function toArray(collection) { return !collection ? [] : Array.prototype.slice.call(collection, 0); }
 	/* Caches the length to "count" for performance as some collections re-evaluate for each call to .length */
 	function countOf(collection) { collection._cachedCount = collection._cachedCount || collection.length; return collection._cachedCount; } 
 	

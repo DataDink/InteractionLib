@@ -49,7 +49,7 @@
 		var values = {};
 		var formValue = serializeInput(form);
 		if (formValue) { values[formValue.name] = formValue.value; }
-		var inputs = form.querySelectorAll('[name], [data-name]');
+		var inputs = form.contextSelectorAll('[name], [data-name]');
 		for (var i = 0; i < inputs.length; i++) {
 			var value = serializeInput(inputs[i]);
 			if (value.name in values) { continue; }
@@ -78,7 +78,7 @@
 		var action = form.getAttribute('action') || form.getAttribute(settings.attributes.formAction);
 		var method = (form.getAttribute('method') || form.getAttribute(settings.attributes.formMethod) || 'POST').toUpperCase();
 		var targetSelector = form.getAttribute('target') || form.getAttribute(settings.attributes.formTarget);
-		var targets = (!targetSelector) ? [form] : document.querySelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [form] : document.contextSelectorAll(targetSelector);
 		var query = formatQuery(serializeForm(form));
 		var request = (!window.XMLHttpRequest) ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
 		request.onreadystatechange = (function(response) { return function() {
@@ -152,9 +152,9 @@
 	window.behaviors.add('ajax-frame', function() {
 		var coordinator = this;
 		var sourceSelector = coordinator.getAttribute(settings.attributes.frameListen);
-		var sources = (!sourceSelector) ? [coordinator] : document.querySelectorAll(sourceSelector);
+		var sources = (!sourceSelector) ? [coordinator] : document.contextSelectorAll(sourceSelector);
 		var targetSelector = coordinator.getAttribute(settings.attributes.frameTarget);
-		var targets = (!targetSelector) ? [coordinator] : document.querySelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [coordinator] : document.contextSelectorAll(targetSelector);
 		var method = (coordinator.getAttribute(settings.attributes.frameMode) || settings.modes.replaceContent).toUpperCase();
 		
 		var render = (function(targets, method) { return function(e) {
@@ -177,9 +177,9 @@
 		var coordinator = this;
 		var events = (coordinator.getAttribute(settings.attributes.submitEvents) || 'click').split(/\s+/gi);
 		var sourceSelector = coordinator.getAttribute(settings.attributes.submitListen);
-		var sources = (!sourceSelector) ? [coordinator] : document.querySelectorAll(sourceSelector);
+		var sources = (!sourceSelector) ? [coordinator] : document.contextSelectorAll(sourceSelector);
 		var targetSelector = coordinator.getAttribute(settings.attributes.submitTarget);
-		var targets = (!targetSelector) ? [coordinator] : document.querySelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [coordinator] : document.contextSelectorAll(targetSelector);
 		
 		var submit = (function(targets) { return function(e) {
 			sendEvent(targets, settings.events.triggerSubmit, {});

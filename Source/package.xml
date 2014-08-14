@@ -1,5 +1,6 @@
 <package>
 	<file name="eventing.js" />
+	<file name="contextSelector.js" />
 	<file name="behaviors.js">
 		<dependency name="eventing.js" />
 	</file>	
