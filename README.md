@@ -1,4 +1,4 @@
-Interaction Lib (2.0) ::IN PROGRESS::
+Interaction Lib (2.0)
 =====================================
 
 NOT PRODUCTION READY!
