@@ -52,16 +52,17 @@
 	function contextSelect(source, selector, selectionMethod, matchMethod) {
 		var parts = (selector || '').split('>>', 2), context = (parts[0] || '').replace(/s+/g, '').toLowerCase(), query = (parts[1] || '');
 		if (context === 'parent') { return matchMethod(source, query, 'parentNode'); }
+		if (context === 'child') { return toArray(source[selectionMethod](query)); }
 		if (context === 'next') { return matchMethod(source, query, 'nextSibling'); }
 		if (context === 'prev') { return matchMethod(source, query, 'previousSibling'); }
-		if (!context) { return toArray(source[selectionMethod](selector)); }
+		return toArray(document[selectionMethod](selector));
 	}
 	
 	function wireExtension(context) {
 		context.contextSelector = context.contextSelector
-			|| function(selector) { return contextSelect(this, selector, this.querySelector, single); };
+			|| function(selector) { return contextSelect(this, selector, 'querySelector', single); };
 		context.contextSelectorAll = context.contextSelectorAll
-			|| function(selector) { return contextSelect(this, selector, this.querySelectorAll, multiple); };
+			|| function(selector) { return contextSelect(this, selector, 'querySelectorAll', multiple); };
 	}
 	wireExtension(window.Element.prototype);
 	wireExtension(window.document);

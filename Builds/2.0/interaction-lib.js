@@ -60,6 +60,78 @@
 })();
 
 
+/*contextSelector.js*/
+(function() {
+	/***********************************************************************************/
+	/*                      contextSelector(All) Extension                             */
+	/*                                                                                 */
+	/* Extends the DOM with both contextSelector and contextSelectorAll methods        */
+	/* which allow a slightly extended selector model over querySelector(All).         */
+	/*                                                                                 */
+	/* Syntax: [context]>>[selector]                                                   */
+	/*                                                                                 */
+	/* Contexs:                                                                        */
+	/*    'parent': Selects parent(s) of the current element matching the selector.    */
+	/*    'next': Selects sibling(s) after the current element matching the selector.  */
+	/*    'prev': Selects sibling(s) before the current element matching the selector. */
+	/*                                                                                 */
+	/***********************************************************************************/
+	
+	function wirePolyfill(context) {
+		context.matchesSelector = context.matchesSelector
+			|| context.webkitMatchesSelector
+			|| context.mozMatchesSelector
+			|| context.msMatchesSelector
+			|| context.oMatchesSelector
+			|| function(selector) {
+				var container = this.parent || document, matches = container.querySelectorAll(selector), i = -1;
+				while(matches[++i] && matches[i] != this);
+				return !!matches[i];
+			};
+	}
+	wirePolyfill(window.Element.prototype);
+	wirePolyfill(window.document);
+	
+	function toArray(collection) { return !collection ? [] : Array.prototype.slice.call(collection, 0); }
+	
+	function single(context, selector, itteration) {
+		var sibling = context[itteration];
+		while (!!sibling) { 
+			if (!!sibling.matchesSelector && sibling.matchesSelector(selector)) { return sibling; }
+			sibling = sibling[itteration];
+		}
+	}
+	
+	function multiple(context, selector, itteration) {
+		var matches = [];
+		var sibling = context[itteration];
+		while (!!sibling) { 
+			if (!!sibling.matchesSelector && sibling.matchesSelector(selector)) { matches.push(sibling); } 
+			sibling = sibling[itteration];		
+		}
+		return matches;
+	}
+	
+	function contextSelect(source, selector, selectionMethod, matchMethod) {
+		var parts = (selector || '').split('>>', 2), context = (parts[0] || '').replace(/s+/g, '').toLowerCase(), query = (parts[1] || '');
+		if (context === 'parent') { return matchMethod(source, query, 'parentNode'); }
+		if (context === 'child') { return toArray(source[selectionMethod](query)); }
+		if (context === 'next') { return matchMethod(source, query, 'nextSibling'); }
+		if (context === 'prev') { return matchMethod(source, query, 'previousSibling'); }
+		return toArray(document[selectionMethod](selector));
+	}
+	
+	function wireExtension(context) {
+		context.contextSelector = context.contextSelector
+			|| function(selector) { return contextSelect(this, selector, 'querySelector', single); };
+		context.contextSelectorAll = context.contextSelectorAll
+			|| function(selector) { return contextSelect(this, selector, 'querySelectorAll', multiple); };
+	}
+	wireExtension(window.Element.prototype);
+	wireExtension(window.document);
+})();
+
+
 /*behaviors.js*/
 (function() { /* Behaviors */
 	var settings = {
@@ -80,7 +152,7 @@
 	}
 	
 	/* Ensures a collection is an array */
-	function toArray(collection) { return Array.prototype.slice.call(collection, 0); }
+	function toArray(collection) { return !collection ? [] : Array.prototype.slice.call(collection, 0); }
 	/* Caches the length to "count" for performance as some collections re-evaluate for each call to .length */
 	function countOf(collection) { collection._cachedCount = collection._cachedCount || collection.length; return collection._cachedCount; } 
 	
@@ -267,7 +339,7 @@
 		var values = {};
 		var formValue = serializeInput(form);
 		if (formValue) { values[formValue.name] = formValue.value; }
-		var inputs = form.querySelectorAll('[name], [data-name]');
+		var inputs = form.contextSelectorAll('[name], [data-name]');
 		for (var i = 0; i < inputs.length; i++) {
 			var value = serializeInput(inputs[i]);
 			if (value.name in values) { continue; }
@@ -284,7 +356,7 @@
 		return query.join('&');
 	}
 	
-	function appendQuery(action, query) {
+	function appendUrl(action, query) {
 		if (action.indexOf('?') < 0) { action += '?'; }
 		else { action += '&'; }
 		return action + query;
@@ -296,7 +368,7 @@
 		var action = form.getAttribute('action') || form.getAttribute(settings.attributes.formAction);
 		var method = (form.getAttribute('method') || form.getAttribute(settings.attributes.formMethod) || 'POST').toUpperCase();
 		var targetSelector = form.getAttribute('target') || form.getAttribute(settings.attributes.formTarget);
-		var targets = (!targetSelector) ? [form] : document.querySelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [form] : form.contextSelectorAll(targetSelector);
 		var query = formatQuery(serializeForm(form));
 		var request = (!window.XMLHttpRequest) ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
 		request.onreadystatechange = (function(response) { return function() {
@@ -370,9 +442,9 @@
 	window.behaviors.add('ajax-frame', function() {
 		var coordinator = this;
 		var sourceSelector = coordinator.getAttribute(settings.attributes.frameListen);
-		var sources = (!sourceSelector) ? [coordinator] : document.querySelectorAll(sourceSelector);
+		var sources = (!sourceSelector) ? [coordinator] : coordinator.contextSelectorAll(sourceSelector);
 		var targetSelector = coordinator.getAttribute(settings.attributes.frameTarget);
-		var targets = (!targetSelector) ? [coordinator] : document.querySelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelectorAll(targetSelector);
 		var method = (coordinator.getAttribute(settings.attributes.frameMode) || settings.modes.replaceContent).toUpperCase();
 		
 		var render = (function(targets, method) { return function(e) {
@@ -395,9 +467,9 @@
 		var coordinator = this;
 		var events = (coordinator.getAttribute(settings.attributes.submitEvents) || 'click').split(/\s+/gi);
 		var sourceSelector = coordinator.getAttribute(settings.attributes.submitListen);
-		var sources = (!sourceSelector) ? [coordinator] : document.querySelectorAll(sourceSelector);
+		var sources = (!sourceSelector) ? [coordinator] : coordinator.contextSelectorAll(sourceSelector);
 		var targetSelector = coordinator.getAttribute(settings.attributes.submitTarget);
-		var targets = (!targetSelector) ? [coordinator] : document.querySelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelectorAll(targetSelector);
 		
 		var submit = (function(targets) { return function(e) {
 			sendEvent(targets, settings.events.triggerSubmit, {});
