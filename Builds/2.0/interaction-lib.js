@@ -1,4 +1,4 @@
-/*eventing.js*/
+/************eventing.js************/
 (function() {
 	function clone(obj) { var dupe = {}; for (var p in obj) { dupe[p] = obj[p]; } return dupe; }
 	
@@ -59,8 +59,7 @@
 	}
 })();
 
-
-/*contextSelector.js*/
+/************contextSelector.js************/
 (function() {
 	/***********************************************************************************/
 	/*                      contextSelector(All) Extension                             */
@@ -131,8 +130,7 @@
 	wireExtension(window.document);
 })();
 
-
-/*behaviors.js*/
+/************behaviors.js************/
 (function() { /* Behaviors */
 	var settings = {
 		attributes: {
@@ -286,8 +284,7 @@
 		window.addEventListener('load', onDocumentReady, false);
 	}
 })(); 
-
-/*ajax.js*/
+/************ajax.js************/
 (function() {
 	var settings = {
 		events: {
@@ -482,3 +479,39 @@
 		}
 	});
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
