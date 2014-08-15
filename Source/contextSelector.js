@@ -22,8 +22,8 @@
 			|| context.oMatchesSelector
 			|| function(selector) {
 				var container = this.parent || document, matches = container.querySelectorAll(selector), i = -1;
-				while(nodes[++i] && nodes[i] != this);
-				return !!nodes[i];
+				while(matches[++i] && matches[i] != this);
+				return !!matches[i];
 			};
 	}
 	wirePolyfill(window.Element.prototype);
@@ -33,13 +33,19 @@
 	
 	function single(context, selector, itteration) {
 		var sibling = context[itteration];
-		while (sibling && !!sibling.matchesSelector) { if (sibling.matchesSelector(selector)) { return sibling; } }
+		while (!!sibling) { 
+			if (!!sibling.matchesSelector && sibling.matchesSelector(selector)) { return sibling; }
+			sibling = sibling[itteration];
+		}
 	}
 	
 	function multiple(context, selector, itteration) {
 		var matches = [];
 		var sibling = context[itteration];
-		while (sibling && !!sibling.matchesSelector) { if (sibling.matchesSelector(selector)) { matches.push(sibling); sibling = sibling[itteration]; }
+		while (!!sibling) { 
+			if (!!sibling.matchesSelector && sibling.matchesSelector(selector)) { matches.push(sibling); } 
+			sibling = sibling[itteration];		
+		}
 		return matches;
 	}
 	
