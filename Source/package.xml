@@ -6,6 +6,7 @@
 	</file>	
 	<file name="ajax.js">
 		<dependency name="eventing.js" />
+		<dependency name="contextSelector.js" />
 		<dependency name="behaviors.js" />
 	</file>
 </package>
