@@ -49,7 +49,7 @@
 		var values = {};
 		var formValue = serializeInput(form);
 		if (formValue) { values[formValue.name] = formValue.value; }
-		var inputs = form.contextSelectorAll('[name], [data-name]');
+		var inputs = form.querySelectorAll('[name], [data-name]');
 		for (var i = 0; i < inputs.length; i++) {
 			var value = serializeInput(inputs[i]);
 			if (value.name in values) { continue; }
