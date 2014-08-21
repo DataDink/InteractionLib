@@ -1,0 +1,73 @@
+<html>
+	<head>
+		<script src="../../Source/eventing.js" type="text/javascript"></script>
+		<script src="../../Source/contextSelector.js" type="text/javascript"></script>
+		<script src="../../Source/behaviors.js" type="text/javascript"></script>
+		<script src="../../Source/ajax.js" type="text/javascript"></script>
+		<style>
+			div {
+				display: inline-block;
+				padding: 10px;
+				border: 1px solid black;
+			}
+			.mark {
+				border: 1px solid green;
+			}
+		</style>
+	</head>
+	<body>
+		<section>
+			<h4>Parent</h4>
+			<div><div><div><div id="parent" class="mark"></div></div></div></div>
+		</section>
+		
+		<section>
+			<h4>Parents</h4>
+			<div><div><div><div id="parents" class="mark"></div></div></div></div>
+		</section>
+		
+		<section>
+			<h4>Child</h4>
+			<div id="child" class="mark"><div><div><div></div></div></div></div>
+		</section>
+		
+		<section>
+			<h4>Children</h4>
+			<div id="children" class="mark"><div><div><div></div></div></div></div>
+		</section>
+		
+		<section>
+			<h4>Prev</h4>
+			<div></div><div></div><div></div><div id="prev" class="mark"></div><div></div><div></div><div></div>
+		</section>
+		
+		<section>
+			<h4>PrevAll</h4>
+			<div></div><div></div><div></div><div id="prevall" class="mark"></div><div></div><div></div><div></div>
+		</section>
+		
+		<section>
+			<h4>Next</h4>
+			<div></div><div></div><div></div><div id="next" class="mark"></div><div></div><div></div><div></div>
+		</section>
+		
+		<section>
+			<h4>NextAll</h4>
+			<div></div><div></div><div></div><div id="nextall" class="mark"></div><div></div><div></div><div></div>
+		</section>
+
+	</body>
+	
+	<script>
+		var tests = document.querySelectorAll('.mark');
+		for (var i = 0; i < tests.length; i++) {
+			var test = tests[i];
+			var name = test.id;
+			var targets = test.contextSelector(name + '>>div');
+			for (t = 0; t < targets.length; t++) {
+				var target = targets[t];
+				target.style.border = '1px solid red';
+			}
+		}
+	</script>
+</html>

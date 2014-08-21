@@ -78,7 +78,7 @@
 		var action = form.getAttribute('action') || form.getAttribute(settings.attributes.formAction);
 		var method = (form.getAttribute('method') || form.getAttribute(settings.attributes.formMethod) || 'POST').toUpperCase();
 		var targetSelector = form.getAttribute('target') || form.getAttribute(settings.attributes.formTarget);
-		var targets = (!targetSelector) ? [form] : form.contextSelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [form] : form.contextSelector(targetSelector);
 		var query = formatQuery(serializeForm(form));
 		var request = (!window.XMLHttpRequest) ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
 		request.onreadystatechange = (function(response) { return function() {
@@ -152,9 +152,9 @@
 	window.behaviors.add('ajax-frame', function() {
 		var coordinator = this;
 		var sourceSelector = coordinator.getAttribute(settings.attributes.frameListen);
-		var sources = (!sourceSelector) ? [coordinator] : coordinator.contextSelectorAll(sourceSelector);
+		var sources = (!sourceSelector) ? [coordinator] : coordinator.contextSelector(sourceSelector);
 		var targetSelector = coordinator.getAttribute(settings.attributes.frameTarget);
-		var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelector(targetSelector);
 		var method = (coordinator.getAttribute(settings.attributes.frameMode) || settings.modes.replaceContent).toUpperCase();
 		
 		var render = (function(targets, method) { return function(e) {
@@ -177,9 +177,9 @@
 		var coordinator = this;
 		var events = (coordinator.getAttribute(settings.attributes.submitEvents) || 'click').split(/\s+/gi);
 		var sourceSelector = coordinator.getAttribute(settings.attributes.submitListen);
-		var sources = (!sourceSelector) ? [coordinator] : coordinator.contextSelectorAll(sourceSelector);
+		var sources = (!sourceSelector) ? [coordinator] : coordinator.contextSelector(sourceSelector);
 		var targetSelector = coordinator.getAttribute(settings.attributes.submitTarget);
-		var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelectorAll(targetSelector);
+		var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelector(targetSelector);
 		
 		var submit = (function(targets) { return function(e) {
 			sendEvent(targets, settings.events.triggerSubmit, {});
