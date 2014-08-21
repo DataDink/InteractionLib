@@ -25,6 +25,8 @@ What it does:
 
 Change Log
 ==========
+2.0 : Fixed a bug in and updated the functionality of contextSelector. Documentation updated to reflect.
+
 2.0 : Previous versions retired. Will now be standalone. Redefining purpose of framework.
 
 1.4 : Transitioned to .on from .live to be compliant with jquery 1.9.1+
