@@ -25,6 +25,8 @@ What it does:
 
 Change Log
 ==========
+2.0 : Fixed a bug with form serialization to handle null element values better
+
 2.0 : Fixed a bug in and updated the functionality of contextSelector. Documentation updated to reflect.
 
 2.0 : Previous versions retired. Will now be standalone. Redefining purpose of framework.
