@@ -342,7 +342,7 @@
 		var isCheck = isInput && input.getAttribute('type').toLowerCase() === 'checkbox';
 		var isRadio = isInput && input.getAttribute('type').toLowerCase() === 'radio';
 		if ((isCheck || isRadio) && !input.checked) { return false; }
-		var value = input.value || input.getAttribute('value') || input.getAttribute('data-value');
+		var value = ('value' in input ? input.value : input.getAttribute('value') || input.getAttribute('data-value')) || '';
 		return {name: name, value: value};
 	}
 	
