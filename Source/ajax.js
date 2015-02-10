@@ -34,37 +34,47 @@
 	}
 	
 	/**************************** ajax-form ***************************/
-	function serializeInput(input) {
-		var name = input.getAttribute('name') || input.getAttribute('data-name');
-		if (!name) { return false; }
-		var isInput = (input.tagName || '').toLowerCase() === 'input';
-		var isCheck = isInput && input.getAttribute('type').toLowerCase() === 'checkbox';
-		var isRadio = isInput && input.getAttribute('type').toLowerCase() === 'radio';
-		if ((isCheck || isRadio) && !input.checked) { return false; }
-		var value = ('value' in input ? input.value : input.getAttribute('value') || input.getAttribute('data-value')) || '';
-		return {name: name, value: value};
-	}
-	
-	function serializeForm(form) {
-		var values = {};
-		var formValue = serializeInput(form);
-		if (formValue) { values[formValue.name] = formValue.value; }
-		var inputs = form.querySelectorAll('[name], [data-name]');
-		for (var i = 0; i < inputs.length; i++) {
-			var value = serializeInput(inputs[i]);
-			if (value.name in values) { continue; }
-			values[value.name] = value.value;
-		}
-		return values;
-	}
-	
-	function formatQuery(queryValues) {
-		var query = [];
-		for (var name in queryValues) {
-			query.push(name + '=' + encodeURIComponent(queryValues[name]));
-		}
-		return query.join('&');
-	}
+    function serializeInput(input) {
+        var name = input.getAttribute('name') || input.getAttribute('data-name');
+        if (!name) { return false; }
+        var values = [];
+        var isSelect = (input.tagName || '').toLowerCase() === 'select';
+        if (isSelect) {
+            for (var i = 0; i < input.options.length; i++) {
+                if (input.options[i].selected) { values.push(input.options[i].value); }
+            }
+            return { name: name, values: values };
+        }
+        var isInput = (input.tagName || '').toLowerCase() === 'input';
+        var isCheck = isInput && input.getAttribute('type').toLowerCase() === 'checkbox';
+        var isRadio = isInput && input.getAttribute('type').toLowerCase() === 'radio';
+        if ((isCheck || isRadio) && !input.checked) { return false; }
+        values.push(('value' in input ? input.value : input.getAttribute('value') || input.getAttribute('data-value')) || '');
+        return { name: name, values: values };
+    }
+
+    function serializeForm(form) {
+        var values = {};
+        var formValue = serializeInput(form);
+        if (formValue) { values[formValue.name] = [formValue.value]; }
+        var inputs = form.querySelectorAll('[name], [data-name]');
+        for (var i = 0; i < inputs.length; i++) {
+            var value = serializeInput(inputs[i]);
+            if (!value) { continue; }
+            values[value.name] = (values[value.name] || []).concat(value.values);
+        }
+        return values;
+    }
+
+    function formatQuery(queryValues) {
+        var query = [];
+        for (var name in queryValues) {
+            for (var i = 0; i < queryValues[name].length; i++) {
+                query.push(name + '=' + encodeURIComponent(queryValues[name][i]));
+            }
+        }
+        return query.join('&');
+    }
 	
 	function appendUrl(action, query) {
 		if (action.indexOf('?') < 0) { action += '?'; }
