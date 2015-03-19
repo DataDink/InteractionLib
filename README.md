@@ -1,10 +1,5 @@
 Interaction Lib (2.0)
 =====================================
-
-NOT PRODUCTION READY!
-
-The restructure of this project is in progress and is still untested/buggy.
-
 by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop)
 
 Documentation: [Here](http://datadink.github.io/InteractionLib/)
