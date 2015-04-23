@@ -93,7 +93,10 @@
 		var request = (!window.XMLHttpRequest) ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
 		request.onreadystatechange = (function(response) { return function() {
 			if (response.readyState !== 4) { return; }
-			if (response.status >= 500 && response.status < 600) {
+			
+			var isSuccess = response.status >= 200 && response.status < 300 || response.status === 304;
+			
+			if (!isSuccess) {
 				sendEvent(targets, settings.events.submitFailure, {
 					form: form, action: action, query: query, method: method,
 					status: response.status,
@@ -119,6 +122,8 @@
 		function send() {
 			var url = (method === 'GET') ? appendUrl(action, query) : action;
 			request.open(method, url, true);
+			// TODO: This might cause a Preflight on CORS requests - see if we want to make that optional
+			request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			if (method === 'POST') {
 				request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 				request.send(query);
