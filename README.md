@@ -4,7 +4,7 @@ by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.n
 
 Documentation: [Here](http://datadink.github.io/InteractionLib/)
 
-This is a standalone micro-framework that provides markup-wiring for common ajax and UI interactions.
+This is a standalone prototyping framework that provides markup-wiring for common ajax and UI interactions.
 
 Requirements:
 -------------
@@ -14,9 +14,9 @@ Requirements:
 What it does:
 -------------
 * Provides declaractive wirings for page functionality and interactions through common data attributes.
-* Offers codeless SPA development.
-* Greatly decreases the amount of time it takes to produce interactive pages.
-* Greatly decreases the amount of maintenance required for interactive pages.
+* Can quickly piece together a prototype with little to no wireup coding required.
+* Useful for rapid prototyping of single-page interactions.
+* Built with custom interaction libraries in mind.
 
 Change Log
 ==========
