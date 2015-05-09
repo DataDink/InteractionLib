@@ -1,10 +1,9 @@
 (function() {
-	var clone = window.behaviors.extensions.clone;
-
 	function setDispatchPolyfills(obj) { /* this is IE8 only */
 		if (!obj.dispatchEvent) {
 			obj.dispatchEvent = function(evt) {
-				if (!evt.target) { evt = clone(evt); evt.target = this; }
+				var clone = {}; for (var m in evt) { clone[m] = evt[m]; };
+				if (!evt.target) { evt = clone; evt.target = this; }
 				evt.currentTarget = this;
 				var handlers = (this.customEventHandlers || {})[evt.type] || [];
 				for (var i = 0; i < handlers.length; i++) { handlers[i].call(this, evt); }
@@ -19,8 +18,11 @@
 			obj.removeEventListener = (function(detach) { return function(type, handler, capture) {
 				detach.call(this, type, handler, capture);
 				if (!this.customEventHandlers || !this.customEventHandlers[type]) { return; }
-				this.customEventHandlers[type] = this.customEventHandlers[type]
-					.filter(function(h) { return h !== handler; });
+				for (var i = this.customEventHandlers[type].length - 1; i >= 0; i--) {
+					if (this.customEventHandlers[type][i] === handler) {
+						this.customEventHandlers[type].splice(i, 1);
+					}
+				}
 			};})(obj.removeEventListener);
 		}
 	}

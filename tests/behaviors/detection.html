@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Detection</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/behaviors.js"></script>
+      <script>
+         window.pretests = 0;
+         window.posttests = 0;
+         window.flytests = 0;
+         behaviors.add('pre-test', function() {
+            window.pretests++;
+         });
+      </script>
+   </head>
+   <body>
+      <div data-behavior="pre-test">
+         <div data-behavior="post-test">
+            <div data-behavior="pre-test post-test">
+            </div>
+         </div>
+      </div>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         QUnit.test('At Init', function(assert) {
+            assert.strictEqual(window.pretests, 2, 'Pretests exist');
+            assert.strictEqual(window.posttests, 0, "Posttests don't");
+         });
+
+         setTimeout(function() {
+            behaviors.add('post-test', function() {
+               window.posttests++;
+            });
+
+
+            QUnit.test('At Add', function(assert) {
+               assert.strictEqual(window.pretests, 2, 'Pretests unchanged');
+               assert.strictEqual(window.posttests, 2, 'Posttests added');
+            });
+
+            behaviors.add('fly-test', function() {
+               window.flytests++;
+            })
+
+            setTimeout(function() {
+               var element = document.createElement('div');
+               element.innerHTML = '<div data-behavior="fly-test"></div>';
+               var div = element.firstChild;
+
+               setTimeout(function() {
+                  QUnit.test('At Creation', function(assert) {
+                     assert.strictEqual(window.flytests, 0, 'Not detected');
+                  });
+
+                  setTimeout(function() {
+                     document.body.appendChild(div);
+
+                     setTimeout(function() {
+                        QUnit.test('At Append', function(assert) {
+                           assert.strictEqual(window.flytests, 1, 'Detected');
+                        });
+
+                        setTimeout(function() {
+                           var container = document.body.querySelector('[data-behavior]');
+                           container.appendChild(div);
+
+                           setTimeout(function() {
+                              QUnit.test('At Move', function(assert) {
+                                 assert.strictEqual(window.flytests, 1, 'Unchanged');
+                              });
+                           }, 10);
+                        }, 10);
+                     }, 10)
+                  }, 10);
+               }, 10);
+            }, 10);
+         }, 100);
+      </script>
+   </body>
+</html>

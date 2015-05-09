@@ -4,12 +4,18 @@ module.exports = function(grunt) {
          options: { separator: ';\r\n\r\n' },
          behaviors: {
             src: [
+               'source/polyfills/addEventListener.js',
+               'source/polyfills/CustomEvent.js',
+               'source/polyfills/matches.js',
                'source/behaviors.js'
             ],
             dest: 'builds/behaviors.js'
          },
          interactionLib: {
             src: [
+               'source/polyfills/addEventListener.js',
+               'source/polyfills/CustomEvent.js',
+               'source/polyfills/matches.js',
                'source/behaviors.js',
                'source/extensions/*.js',
                'source/behaviors/*.js'
