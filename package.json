@@ -1,0 +1,42 @@
+{
+  "private": true,
+  "name": "InteractionLib",
+  "version": "2.1.0",
+  "description": "A javascript framework for prototyping interactions",
+  "main": "builds/interaction-lib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DataDink/InteractionLib.git"
+  },
+  "keywords": [
+    "javascript",
+    "framework",
+    "interaction",
+    "prototype",
+    "prototyping",
+    "ux",
+    "design",
+    "web",
+    "frontend",
+    "front-end",
+    "front",
+    "end",
+    "js",
+    "jquery"
+  ],
+  "author": "DataDink",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DataDink/InteractionLib/issues"
+  },
+  "homepage": "https://github.com/DataDink/InteractionLib",
+  "devDependencies": {
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-uglify": "^0.9.1",
+    "qunitjs": "^1.18.0"
+  }
+}

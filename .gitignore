@@ -28,6 +28,10 @@ local.properties
 # PDT-specific
 .buildpath
 
+#################
+## NPM
+#################
+node_modules/
 
 #################
 ## Visual Studio
