@@ -5,18 +5,95 @@
       <title>Ajax-Form</title>
       <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
       <script src="../../builds/interaction-lib.js"></script>
+      <style>form { display: none; }</style>
    </head>
    <body>
-      <form data-behavior="ajax-form"
-            action="test"
-            method="GET">
-            <input type="text" name="value" value="test" />
-      </form>
       <div id="qunit"></div>
       <div id="qunit-fixture"></div>
       <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
       <script>
-         window.XMLHttpRequest = function() {}
+         var data = {};
+         function reset(action, method) {
+            data = {
+               status: 200, response: '',
+               responseText: '', responseType: 'text',
+               form: document.createElement('form')
+            };
+            data.form.setAttribute('data-behavior', 'ajax-form');
+            data.form.setAttribute('action', action || 'test');
+            data.form.setAttribute('method', method || 'GET');
+            data.form.innerHTML = '<input type="text" name="value" value="test" />';
+            document.body.appendChild(data.form);
+         }
+         window.XMLHttpRequest = function() {
+            this.open = function(method, uri) {
+               data.method = method;
+               data.uri = uri;
+
+               this.setRequestHeader = function() {};
+
+               this.readyState = 4;
+               this.status = data.status;
+               this.responseText = data.responseText;
+               this.responseType = data.responseType;
+               this.response = data.response;
+
+               this.send = function() { this.onreadystatechange(); }
+            }
+         };
+         window.ActiveXObject = window.XMLHttpRequest;
+         var trigger = behaviors.extensions.trigger;
+         var submit = behaviors.ajax.submit.events.submit;
+
+         function respondTests() {
+            reset();
+            data.status = 200; data.responseText = ''; data.response = '';
+            data.form.addEventListener(behaviors.ajax.form.events.before, function() {data.before = true;});
+            data.form.addEventListener(behaviors.ajax.form.events.after, function() {data.after = true;});
+            data.form.addEventListener(behaviors.ajax.form.events.success, function() {data.success = true;});
+            data.form.addEventListener(behaviors.ajax.form.events.failure, function() {data.error = true;});
+
+            setTimeout(function() {
+               QUnit.test('Responds', function(assert) {
+                  trigger(data.form, submit);
+                  assert.ok(data.before, 'Before');
+                  assert.ok(data.after, 'After');
+                  assert.ok(data.success, 'Success');
+                  assert.ok(!data.error, 'Not error');
+                  data.success = false;
+                  data.status = 500;
+                  trigger(data.form, submit);
+                  assert.ok(!data.success, 'Not success');
+                  assert.ok(data.error, 'Error');
+                  dataTests();
+               });
+            });
+         }
+
+         function dataTests() {
+            var detail = {};
+            reset('action', 'GET');
+            data.status = 200; data.responseText = 'test'; data.response = 'test';
+            data.form.addEventListener(behaviors.ajax.form.events.success, function(e) {
+               detail = e.detail;
+            });
+            setTimeout(function() {
+               QUnit.test('Data', function(assert) {
+                  trigger(data.form, submit);
+                  assert.ok(data.uri === 'action?value=test', 'XHR uri')
+                  assert.ok(data.method === 'GET', 'XHR method');
+                  assert.ok(detail.method === 'GET', 'Detail method');
+                  assert.ok(detail.form === data.form, 'Form');
+                  assert.ok(detail.action === 'action', 'Action');
+                  assert.ok(detail.query === 'value=test', 'Query');
+                  assert.ok(detail.status === 200, 'Status');
+                  assert.ok(detail.type === 'text', 'Type');
+                  assert.ok(detail.response === 'test', 'Response');
+               });
+            });
+         }
+
+         respondTests();
       </script>
    </body>
 </html>
