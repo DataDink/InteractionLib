@@ -7,7 +7,8 @@ window.behaviors.extensions.values = function(input) {
          if (input.options[i].selected) { values.push(input.options[i].value); }
       }
    } else if (input.matches('input[type=checkbox]') || input.matches('input[type=radio]')) {
-      values.push(!!input.checked);
+      if (!input.checked) { return false; }
+      else { values.push(input.value); }
    } else if ('value' in input && input.value) {
       values.push(input.value);
    } else {

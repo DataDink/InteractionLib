@@ -1,6 +1,6 @@
 window.behaviors.extensions.serialize = function(form) {
    var inputs = window.behaviors.extensions.toarray(form.querySelectorAll('[name], [data-name]'));
-   input.unshift(form);
+   inputs.unshift(form);
    var values = {};
    for (var i = 0; i < inputs.length; i++) {
       var info = window.behaviors.extensions.values(inputs[i]);

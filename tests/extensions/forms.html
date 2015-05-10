@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Basical Tests</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/interaction-lib.js"></script>
+   </head>
+   <body>
+      <form style="display: none;">
+         <input type="text" name="text" value="test" />
+         <input type="checkbox" name="checkbox" value="test" checked="checked" />
+         <input type="checkbox" name="checkbox" value="test" checked="checked" />
+         <input type="radio" name="radio" value="test" />
+         <textarea name="textarea">test</textarea>
+         <select name="selecta"><option selected="selected" value="test"></option></select>
+         <select name="selectb"><option selected="selected">test</option></select>
+         <select name="selectc"><option>test</option></select>
+         <select name="selectd">
+            <option selected="selected" value="test"></option>
+            <option selected="selected" value="test"></option>
+            <option selected="selected" value="test"></option>
+         </select>
+         <select name="selecte" multiple="multiple">
+            <option selected="selected" value="test"></option>
+            <option selected="selected" value="test"></option>
+            <option selected="selected" value="test"></option>
+         </select>
+      </form>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         QUnit.test('Values', function(assert) {
+            var read = behaviors.extensions.values;
+            assert.ok(read(document.querySelector('[name=text]')).values[0] === 'test', 'Text');
+            assert.ok(read(document.querySelector('[name=checkbox]')).values[0] === 'test', 'Checkbox');
+            assert.ok(read(document.querySelector('[name=radio]')) === false, 'Radio');
+            assert.ok(read(document.querySelector('[name=textarea]')).values[0] === 'test', 'Textarea');
+            assert.ok(read(document.querySelector('[name=selecta]')).values.length === 1, 'Select A length');
+            assert.ok(read(document.querySelector('[name=selecta]')).values[0] === 'test', 'Select A value');
+            assert.ok(read(document.querySelector('[name=selectb]')).values.length === 1, 'Select B length');
+            assert.ok(read(document.querySelector('[name=selectb]')).values[0] === 'test', 'Select B value');
+            assert.ok(read(document.querySelector('[name=selectc]')).values.length === 1, 'Select C length');
+            assert.ok(read(document.querySelector('[name=selectd]')).values.length === 1, 'Select D length');
+            assert.ok(read(document.querySelector('[name=selectd]')).values[0] === 'test', 'Select D value');
+            assert.ok(read(document.querySelector('[name=selecte]')).values.length === 3, 'Select E length');
+            assert.ok(read(document.querySelector('[name=selecte]')).values[0] === 'test', 'Select E value');
+         });
+
+         QUnit.test('Serialize', function(assert) {
+            var ser = behaviors.extensions.serialize;
+            var data = ser(document.querySelector('form'));
+            assert.ok(data.text.length === 1, 'Text length');
+            assert.ok(data.text[0] === 'test', 'Text value');
+            assert.ok(data.checkbox.length === 2, 'Check length');
+            assert.ok(data.checkbox[0] === 'test', 'Check value 1');
+            assert.ok(data.checkbox[1] === 'test', 'Check value 2');
+            assert.ok(!('radio' in data), 'Radio missing');
+            assert.ok(data.textarea.length === 1, 'Textarea length');
+            assert.ok(data.textarea[0] === 'test', 'Textarea value');
+            //...
+            var query = behaviors.extensions.toquery(data);
+            assert.strictEqual(query, 'text=test&checkbox=test&checkbox=test&textarea=test&selecta=test&selectb=test&selectc=test&selectd=test&selecte=test&selecte=test&selecte=test', 'Formats query');
+         });
+      </script>
+   </body>
+</html>

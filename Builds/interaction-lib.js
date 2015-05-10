@@ -449,7 +449,7 @@ window.behaviors.extensions.is = function(value, type) {
 
 window.behaviors.extensions.serialize = function(form) {
    var inputs = window.behaviors.extensions.toarray(form.querySelectorAll('[name], [data-name]'));
-   input.unshift(form);
+   inputs.unshift(form);
    var values = {};
    for (var i = 0; i < inputs.length; i++) {
       var info = window.behaviors.extensions.values(inputs[i]);
@@ -494,7 +494,8 @@ window.behaviors.extensions.values = function(input) {
          if (input.options[i].selected) { values.push(input.options[i].value); }
       }
    } else if (input.matches('input[type=checkbox]') || input.matches('input[type=radio]')) {
-      values.push(!!input.checked);
+      if (!input.checked) { return false; }
+      else { values.push(input.value); }
    } else if ('value' in input && input.value) {
       values.push(input.value);
    } else {
