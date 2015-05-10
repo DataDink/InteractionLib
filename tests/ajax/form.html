@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Ajax-Form</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/interaction-lib.js"></script>
+   </head>
+   <body>
+      <form data-behavior="ajax-form"
+            action="test"
+            method="GET">
+            <input type="text" name="value" value="test" />
+      </form>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         window.XMLHttpRequest = function() {}
+      </script>
+   </body>
+</html>
