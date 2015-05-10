@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Eventing</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/interaction-lib.js"></script>
+   </head>
+   <body>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         var trigger = behaviors.extensions.trigger;
+         var parent = document.createElement('div');
+         var child = document.createElement('div');
+         parent.appendChild(child);
+         document.body.appendChild(parent);
+
+         QUnit.test('Fire', function(assert) {
+            var results = {};
+
+            results.parentFired = false;
+            parent.addEventListener('parent-fire', function() { results.parentFired = true; } );
+            trigger(parent, 'parent-fire');
+
+            assert.ok(results.parentFired === true, 'Parent fire');
+            results.parentFired = false;
+
+            results.parentBubbled = false;
+            parent.addEventListener('child-fire', function() { results.parentBubbled = true; } );
+            results.childFired = false;
+            child.addEventListener('child-fire', function() { results.childFired = true; } );
+            trigger(child, 'child-fire');
+
+            assert.ok(results.parentFired === false, 'Parent dormant');
+            assert.ok(results.parentBubbled === true, 'Parent bubble');
+            assert.ok(results.childFired === true, 'Child fire');
+         });
+
+         QUnit.test('Data', function(assert) {
+            var results = {};
+
+            parent.addEventListener('data-fire', function(e) {
+               results.parentTarget = e.target;
+               results.parentValue = e.detail;
+            });
+            child.addEventListener('data-fire', function(e) {
+               results.childTarget = e.target;
+               results.childValue = e.detail;
+            });
+
+            trigger(child, 'data-fire', {value: 'test'});
+
+            assert.ok(results.parentTarget === child, 'Parent target');
+            assert.ok(results.parentValue.value === 'test', 'Parent value');
+            assert.ok(results.childTarget === child, 'Child target');
+            assert.ok(results.childValue.value === 'test', 'Child value');
+         });
+
+         QUnit.test('Prevention', function(assert) {
+            var results = {};
+
+            parent.addEventListener('prop-fire', function() { results.parentFired = true; } );
+            child.addEventListener('prop-fire', function(e) {
+               e.stopPropagation();
+               results.childFired = true;
+            });
+
+            trigger(child, 'prop-fire');
+
+            assert.ok(results.parentFired !== true, 'Parent fire');
+            assert.ok(results.childFired === true, 'Child fire');
+         });
+      </script>
+   </body>
+</html>
