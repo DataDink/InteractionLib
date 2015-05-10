@@ -600,9 +600,9 @@ window.behaviors.extensions.values = function(input) {
          mode: 'data-ajax-mode'
       },
       modes: {
-         replaceContent: 'FILL',
-         appendContent: 'APPEND',
-         prependContent: 'PREPEND'
+         replaceContent: 'fill',
+         appendContent: 'append',
+         prependContent: 'prepend'
       }
    };
 
@@ -612,19 +612,19 @@ window.behaviors.extensions.values = function(input) {
       var sources = (!sourceSelector) ? [coordinator] : coordinator.contextSelector(sourceSelector);
       var targetSelector = coordinator.getAttribute(window.behaviors.ajax.frame.attributes.target);
       var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelector(targetSelector);
-      var method = (coordinator.getAttribute(window.behaviors.ajax.frame.attributes.mode) || window.behaviors.ajax.frame.modes.replaceContent);
+      var method = (coordinator.getAttribute(window.behaviors.ajax.frame.attributes.mode) || window.behaviors.ajax.frame.modes.replaceContent).toLowerCase();
 
       var render = (function(targets, method) { return function(e) {
          var content = e.detail.response;
          for (var t = 0; t < targets.length; t++) {
-            if (method === settings.modes.appendContent) { append(targets[t], content); }
-            if (method === settings.modes.prependContent) { prepend(targets[t], content); }
-            if (method === settings.modes.replaceContent) { replace(targets[t], content); }
+            if (method === window.behaviors.ajax.frame.modes.appendContent) { append(targets[t], content); }
+            if (method === window.behaviors.ajax.frame.modes.prependContent) { prepend(targets[t], content); }
+            if (method === window.behaviors.ajax.frame.modes.replaceContent) { replace(targets[t], content); }
          }
       };})(targets, method);
 
       for (var s = 0; s < sources.length; s++) {
-         sources[s].addEventListener(settings.events.submitSuccess, render, false);
+         sources[s].addEventListener(window.behaviors.ajax.form.events.success, render, false);
       }
    });
 
@@ -668,7 +668,7 @@ window.behaviors.add('ajax-submit', function() {
    var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelector(targetSelector);
 
    var submit = (function(targets) { return function(e) {
-      sendEvent(targets, window.behaviors.ajax.submit.events.submit, {});
+      window.behaviors.extensions.trigger(targets, window.behaviors.ajax.submit.events.submit, {});
    };})(targets);
 
    for (var s = 0; s < sources.length; s++) {

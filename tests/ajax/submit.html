@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Ajax-Submit</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/interaction-lib.js"></script>
+      <style>form { display: none; }</style>
+   </head>
+   <body>
+      <div data-behavior="ajax-submit"
+            data-ajax-events="test"></div>
+
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         var trigger = behaviors.extensions.trigger;
+         var submit = behaviors.ajax.submit.events.submit;
+
+         var element = document.querySelector('[data-behavior]');
+
+         setTimeout(function() {
+            var triggered = false;
+            element.addEventListener(submit, function() { triggered = true; });
+            trigger(element, 'test');
+
+            QUnit.test('Tests', function(assert) {
+               assert.ok(triggered, 'It did it');
+            });
+         }, 100);
+      </script>
+   </body>
+</html>

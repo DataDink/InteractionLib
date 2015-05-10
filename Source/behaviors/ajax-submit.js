@@ -16,7 +16,7 @@ window.behaviors.add('ajax-submit', function() {
    var targets = (!targetSelector) ? [coordinator] : coordinator.contextSelector(targetSelector);
 
    var submit = (function(targets) { return function(e) {
-      sendEvent(targets, window.behaviors.ajax.submit.events.submit, {});
+      window.behaviors.extensions.trigger(targets, window.behaviors.ajax.submit.events.submit, {});
    };})(targets);
 
    for (var s = 0; s < sources.length; s++) {

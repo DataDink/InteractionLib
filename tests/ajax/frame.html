@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Ajax-Frame</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/interaction-lib.js"></script>
+      <style>form { display: none; }</style>
+   </head>
+   <body>
+      <div data-behavior="ajax-frame"
+            data-ajax-mode="fill"></div>
+      <div data-behavior="ajax-frame"
+            data-ajax-mode="append"></div>
+      <div data-behavior="ajax-frame"
+            data-ajax-mode="prepend"></div>
+
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         var trigger = behaviors.extensions.trigger;
+         var submit = behaviors.ajax.submit.events.submit;
+         var success = behaviors.ajax.form.events.success;
+
+         var fill = document.querySelector('[data-ajax-mode=fill]');
+         var append = document.querySelector('[data-ajax-mode=append]');
+         var prepend = document.querySelector('[data-ajax-mode=prepend]');
+
+         setTimeout(function() {
+            QUnit.test('Fill', function(assert) {
+               trigger(fill, success, {response: '<div></div>'});
+               trigger(fill, success, {response: '<span></span>'});
+
+               assert.ok(fill.childNodes.length === 1, 'Count');
+               assert.ok(fill.firstChild.tagName.toLowerCase() === 'span', 'Content');
+            });
+
+            QUnit.test('Append', function(assert) {
+               trigger(append, success, {response: '<div></div>'});
+               trigger(append, success, {response: '<span></span>'});
+
+               assert.ok(append.childNodes.length === 2, 'Count');
+               assert.ok(append.firstChild.tagName.toLowerCase() === 'div', 'Div');
+               assert.ok(append.lastChild.tagName.toLowerCase() === 'span', 'Span');
+            })
+
+            QUnit.test('Prepend', function(assert) {
+               trigger(prepend, success, {response: '<div></div>'});
+               trigger(prepend, success, {response: '<span></span>'});
+
+               assert.ok(prepend.childNodes.length === 2, 'Count');
+               assert.ok(prepend.lastChild.tagName.toLowerCase() === 'div', 'Div');
+               assert.ok(prepend.firstChild.tagName.toLowerCase() === 'span', 'Span');
+            })
+         }, 100);
+      </script>
+   </body>
+</html>
