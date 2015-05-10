@@ -17,9 +17,10 @@ window.behaviors.add('ajax-nav', function() {
             type: this.responseType,
             response: this.responseText
          };
-         for (var i = 0; i < target.length; i++) {
-            window.behaviors.extensions.trigger(target[i], submit, response);
+         for (var i = 0; i < targets.length; i++) {
+            window.behaviors.extensions.trigger(targets[i], submit, response);
          }
-      }
+      };
+      request.send();
    })
 })

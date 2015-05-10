@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>Ajax-View</title>
+      <title>Ajax-Nav</title>
       <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
       <script src="../../builds/interaction-lib.js"></script>
       <style>form { display: none; }</style>
@@ -34,17 +34,22 @@
          window.ActiveXObject = window.XMLHttpRequest;
 
          var container = document.createElement('div');
-         container.setAttribute('data-behavior', 'ajax-view');;
+         container.setAttribute('data-behavior', 'ajax-nav');;
          container.setAttribute('data-href', 'test');
          data.responseText = '<div id="test"></div>';
+         container.addEventListener(behaviors.ajax.submit.events.submit, function(e) {data.response = e.detail;});
          document.body.appendChild(container);
 
          setTimeout(function() {
-            QUnit.test('Tests', function(assert) {
-               assert.ok(data.uri === 'test', 'Requested');
-               assert.ok(container.firstChild.matches('#test'), 'Pasted');
+            behaviors.extensions.trigger(container, 'click');
+
+            setTimeout(function() {
+               QUnit.test('Tests', function(assert) {
+                  assert.ok(data.response.response === '<div id="test"></div>', 'Triggered');
+               });
             });
          });
+
       </script>
    </body>
 </html>
