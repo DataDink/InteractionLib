@@ -1,4 +1,5 @@
 window.behaviors.extensions.appendquery = function(uri, query) {
-   var join = uri.indexOf('?') >= 0 ? '&' : '?';
-   return uri.replace(/[\/\s]+$/g, '') + join + query.replace(/^[\/\s&\?]+/g, '');
+   query = (query || '').replace(/^[\/\s&\?]+/g, ''); uri = (uri || '').replace(/[\/\s]+$/g, '');
+   if (!query) { return uri; } if (!uri) { return query; }
+   return uri + (uri.indexOf('?') >= 0 ? '&' : '?') + query;
 }

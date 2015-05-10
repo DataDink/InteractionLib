@@ -370,13 +370,16 @@ window.behaviors.extensions.ajax = function() {
 ;
 
 window.behaviors.extensions.appendquery = function(uri, query) {
-   var join = uri.indexOf('?') >= 0 ? '&' : '?';
-   return uri.replace(/[\/\s]+$/g, '') + join + query.replace(/^[\/\s&\?]+/g, '');
+   query = (query || '').replace(/^[\/\s&\?]+/g, ''); uri = (uri || '').replace(/[\/\s]+$/g, '');
+   if (!query) { return uri; } if (!uri) { return query; }
+   return uri + (uri.indexOf('?') >= 0 ? '&' : '?') + query;
 }
 ;
 
 window.behaviors.extensions.appenduri = function(left, right) {
-   return left.replace(/[\/\s]+$/g, '') + '/' + right.replace(/^[\/\s]+/g, '');
+   left = left.replace(/[\/\s]+$/g, ''); right = right.replace(/^[\/\s]+/g, '');
+   if (!left) { return right; } if (!right) { return left; }
+   return left + '/' + right;
 }
 ;
 
@@ -656,6 +659,33 @@ window.behaviors.extensions.values = function(input) {
 })();
 ;
 
+window.behaviors.add('ajax-nav', function() {
+   var container = this;
+   var event = container.getAttribute('data-nav-event') || 'click';
+   container.addEventListener(event, function(e) {
+      if (e.preventDefault) { e.preventDefault(); }
+      if (e.stopPropagation) { e.stopPropagation(); }
+      var uri = container.getAttribute('href') || container.getAttribute('data-href');
+      var targetSelector = container.getAttribute('target') || container.getAttribute('data-nav-target');
+      var targets = (!targetSelector) ? [container] : container.contextSelector(targetSelector);
+      var request = new window.behaviors.extensions.ajax();
+      request.uri = uri;
+      request.onsuccess = function() {
+         var submit = window.behaviors.ajax.submit.events.submit;
+         var response = {
+            form: container, method: 'get', uri: request.uri,
+            status: this.status,
+            type: this.responseType,
+            response: this.responseText
+         };
+         for (var i = 0; i < target.length; i++) {
+            window.behaviors.extensions.trigger(target[i], submit, response);
+         }
+      }
+   })
+})
+;
+
 window.behaviors.ajax = window.behaviors.ajax || {};
 window.behaviors.ajax.submit = {
    events: { submit: 'ajax-submit' },
@@ -682,4 +712,16 @@ window.behaviors.add('ajax-submit', function() {
          sources[s].addEventListener(events[e], submit, false);
       }
    }
+})
+;
+
+window.behaviors.add('ajax-view', function() {
+   var container = this;
+   var request = new window.behaviors.extensions.ajax();
+   request.uri = container.getAttribute('href') || container.getAttribute('data-href');
+   if (!request.uri) { return; }
+   request.onsuccess = function() {
+      container.innerHTML = this.responseText;
+   };
+   request.send();
 })

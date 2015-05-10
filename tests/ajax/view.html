@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Ajax-Form</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/interaction-lib.js"></script>
+      <style>form { display: none; }</style>
+   </head>
+   <body>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         var data = {};
+         window.XMLHttpRequest = function() {
+            this.open = function(method, uri) {
+               data.method = method;
+               data.uri = uri;
+
+               this.setRequestHeader = function() {};
+
+               this.readyState = 4;
+               this.status = 200;
+               this.responseText = data.responseText;
+               this.responseType = 'text';
+               this.response = data.responseText;
+
+               this.send = function() {
+                  this.onreadystatechange();
+               }
+            }
+         };
+         window.ActiveXObject = window.XMLHttpRequest;
+
+         var container = document.createElement('div');
+         container.setAttribute('data-behavior', 'ajax-view');;
+         container.setAttribute('data-href', 'test');
+         data.responseText = '<div id="test"></div>';
+         document.body.appendChild(container);
+
+         setTimeout(function() {
+            QUnit.test('Tests', function(assert) {
+               assert.ok(data.uri === 'test', 'Requested');
+               assert.ok(container.firstChild.matches('#test'), 'Pasted');
+            });
+         });
+      </script>
+   </body>
+</html>
