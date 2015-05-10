@@ -373,7 +373,7 @@ window.behaviors.extensions.clone = function(obj, deep) {
 	/*                                                                                 */
 	/***********************************************************************************/
 
-	var toarray = window.bindings.extensions.toarray;
+	var toarray = window.behaviors.extensions.toarray;
 
 	function single(context, selector, itteration) {
 		var relative = context[itteration];
@@ -423,6 +423,14 @@ window.behaviors.extensions.clone = function(obj, deep) {
 })();
 ;
 
+window.behaviors.extensions.is = function(value, type) {
+   if (value && value.__proto__ && value.__proto__.constructor === type) { return true; }
+   if (value && value.prototype && value.prototype.constructor === type) { return true; }
+   if (value && value.constructor && value.constructor === type) { return true; }
+   return ((typeof(value) || '').toString().toLowerCase() === (type || '').toString().toLowerCase());
+};
+;
+
 (function() {
    var parser = document.createElement('div');
    window.behaviors.extensions.parse = function(html) {
@@ -452,7 +460,7 @@ window.behaviors.extensions.serialize = function(form) {
 window.behaviors.extensions.toquery = function(obj) {
    var items = [];
    for (var member in obj) {
-      var value = (typeof(obj[member]) === 'array') ? obj[member] : [obj[member]];
+      var value = window.behaviors.extensions.is(obj[member], Array) ? obj[member] : [obj[member]];
       for (var i = 0; i < value.length; i++) {
          items.push(encodeURIComponent(member) + '=' + encodeURIComponent(value[i]));
       }

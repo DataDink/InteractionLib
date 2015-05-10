@@ -19,7 +19,7 @@
 	/*                                                                                 */
 	/***********************************************************************************/
 
-	var toarray = window.bindings.extensions.toarray;
+	var toarray = window.behaviors.extensions.toarray;
 
 	function single(context, selector, itteration) {
 		var relative = context[itteration];
