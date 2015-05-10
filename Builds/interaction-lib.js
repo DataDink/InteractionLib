@@ -78,7 +78,6 @@ setEventingPolyfills(window);
 			};
 	}
 	wirePolyfill(window.Element.prototype);
-	wirePolyfill(window.document);
 })();
 ;
 
@@ -385,6 +384,7 @@ window.behaviors.extensions.clone = function(obj, deep) {
 			if (!!relative.matches && relative.matches(selector)) { return [relative]; }
 			relative = relative[itteration];
 		}
+		return [];
 	}
 
 	function multiple(context, selector, itteration) {

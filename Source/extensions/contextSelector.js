@@ -27,6 +27,7 @@
 			if (!!relative.matches && relative.matches(selector)) { return [relative]; }
 			relative = relative[itteration];
 		}
+		return [];
 	}
 
 	function multiple(context, selector, itteration) {

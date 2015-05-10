@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Basical Tests</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/interaction-lib.js"></script>
+   </head>
+   <body>
+      <div id="parent" class="parent">
+         <div id="child" class="parent child">
+            <div id="sibling1" class="child sibling"></div>
+            <div id="sibling2" class="child sibling"></div>
+            <div id="sibling3" class="child sibling"></div>
+         </div>
+      </div>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         QUnit.test('Parents', function(assert) {
+            var element = document.querySelector('#sibling1');
+            var parent = element.contextSelector('parent>>.parent');
+            var parents = element.contextSelector('parents>>.parent');
+            var none = element.contextSelector('parent>>span');
+            assert.ok(parent.length === 1, 'Single');
+            assert.ok(parents.length === 2, 'Double');
+            assert.ok(none.length === 0, 'None');
+            assert.ok(parent[0].matches('#child'), 'Only');
+            assert.ok(parents[0].matches('#child'), 'First');
+            assert.ok(parents[1].matches('#parent'), 'Second');
+         });
+
+         QUnit.test('Children', function(assert) {
+            var root = document.querySelector('#parent');
+            var container = document.querySelector('#child');
+            var csib = container.contextSelector('child>>.sibling');
+            var csibs = container.contextSelector('children>>.sibling');
+            var psib = root.contextSelector('child>>.sibling');
+            var psibs = root.contextSelector('children>>.sibling');
+
+            assert.ok(csib.length === 1, 'CSib');
+            assert.ok(csibs.length === 3, 'CSibs');
+            assert.ok(psib.length === 1, 'PSib');
+            assert.ok(psibs.length === 3, 'PSibs');
+            assert.ok(csib[0].matches('#sibling1'), 'CSib 1');
+            assert.ok(csibs[0].matches('#sibling1'), 'CSibs 1');
+            assert.ok(csibs[1].matches('#sibling2'), 'CSibs 2');
+            assert.ok(csibs[2].matches('#sibling3'), 'CSibs 3');
+            assert.ok(psib[0].matches('#sibling1'), 'PSib 1');
+            assert.ok(psibs[0].matches('#sibling1'), 'PSibs 1');
+            assert.ok(psibs[1].matches('#sibling2'), 'PSibs 2');
+            assert.ok(psibs[2].matches('#sibling3'), 'PSibs 3');
+
+         });
+
+         QUnit.test('Siblings', function(assert) {
+            var top = document.querySelector('#sibling1');
+            var bot = document.querySelector('#sibling3');
+            var topnext = top.contextSelector('next>>.sibling');
+            var topnexts = top.contextSelector('nextAll>>.sibling');
+            var topprev = top.contextSelector('prev>>.sibling');
+            var topprevs = top.contextSelector('prevAll>>.sibling');
+            var botnext = bot.contextSelector('next>>.sibling');
+            var botnexts = bot.contextSelector('nextAll>>.sibling');
+            var botprev = bot.contextSelector('prev>>.sibling');
+            var botprevs = bot.contextSelector('prevAll>>.sibling');
+            var upchild = bot.contextSelector('prevAll>>.child');
+
+            assert.ok(topnext.length === 1, 'Topnext');
+            assert.ok(topnexts.length === 2, 'Topnexts');
+            assert.ok(topprev.length === 0, 'Topprev');
+            assert.ok(topprevs.length === 0, 'Topprevs');
+            assert.ok(botnext.length === 0, 'Botnext');
+            assert.ok(botnexts.length === 0, 'Botnexts');
+            assert.ok(botprev.length === 1, 'Botprev');
+            assert.ok(botprevs.length === 2, 'Botprevs');
+            assert.ok(upchild.length === 2, 'Upchild');
+            assert.ok(topnext[0].matches('#sibling2'), 'Topnext 1');
+            assert.ok(botprev[0].matches('#sibling2'), 'Botprev 1');
+            assert.ok(topnexts[0].matches('#sibling2'), 'Topnexts 1');
+            assert.ok(topnexts[1].matches('#sibling3'), 'Topnexts 2');
+            assert.ok(botprevs[0].matches('#sibling2'), 'Botprevs 1');
+            assert.ok(botprevs[1].matches('#sibling1'), 'Botprevs 2');
+         })
+      </script>
+   </body>
+</html>

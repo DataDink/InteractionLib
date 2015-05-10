@@ -78,7 +78,6 @@ setEventingPolyfills(window);
 			};
 	}
 	wirePolyfill(window.Element.prototype);
-	wirePolyfill(window.document);
 })();
 ;
 
