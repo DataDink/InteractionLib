@@ -1,6 +1,6 @@
-Interaction Lib (2.0)
+Interaction Lib (2.1)
 =====================================
-by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop)
+by [Mark Nelson](http://www.markonthenet.com/), [Dave Reed](http://weblogs.asp.net/infinitiesloop), [Mike Stum](http://www.stum.de/)
 
 Documentation: [Here](http://datadink.github.io/InteractionLib/)
 
@@ -20,6 +20,12 @@ What it does:
 
 Change Log
 ==========
+2.1 : Hello node world
+
+2.1 : Unit tests - basic coverage (so far)
+
+2.1 : Project broken out for testability and sanity
+
 2.0 : Fixed a bug with form serialization to handle null element values better
 
 2.0 : Fixed a bug in and updated the functionality of contextSelector. Documentation updated to reflect.
