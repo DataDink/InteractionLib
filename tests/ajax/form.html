@@ -72,7 +72,7 @@
 
          function dataTests() {
             var detail = {};
-            reset('action', 'GET');
+            reset('action', 'get');
             data.status = 200; data.responseText = 'test'; data.response = 'test';
             data.form.addEventListener(behaviors.ajax.form.events.success, function(e) {
                detail = e.detail;
@@ -81,8 +81,8 @@
                QUnit.test('Data', function(assert) {
                   trigger(data.form, submit);
                   assert.ok(data.uri === 'action?value=test', 'XHR uri')
-                  assert.ok(data.method === 'GET', 'XHR method');
-                  assert.ok(detail.method === 'GET', 'Detail method');
+                  assert.ok(data.method === 'get', 'XHR method');
+                  assert.ok(detail.method === 'get', 'Detail method');
                   assert.ok(detail.form === data.form, 'Form');
                   assert.ok(detail.action === 'action', 'Action');
                   assert.ok(detail.query === 'value=test', 'Query');
