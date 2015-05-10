@@ -1,4 +1,3 @@
-window.behaviors.extensions = window.behaviors.extensions || {};
 window.behaviors.extensions.clone = function(obj, deep) {
    if (!deep) {
       var copy = {};
@@ -7,4 +6,4 @@ window.behaviors.extensions.clone = function(obj, deep) {
    } else {
       return JSON.parse(JSON.stringify(obj));
    }
-}
+};

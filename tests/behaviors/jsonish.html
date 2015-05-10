@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>jsonish extension</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/behaviors.js"></script>
+   </head>
+   <body>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         QUnit.test('Numbers', function(assert) {
+            assert.ok(behaviors.extensions.jsonish('0') === 0, 'Basic');
+            assert.ok(behaviors.extensions.jsonish('0.1') === 0.1, 'Decimal');
+            assert.ok(behaviors.extensions.jsonish('  1') === 1, 'Space before');
+            assert.ok(behaviors.extensions.jsonish('1   ') === 1, 'Space after');
+         });
+
+         QUnit.test('Bools', function(assert) {
+            assert.ok(behaviors.extensions.jsonish('true') === true, 'Basic');
+            assert.ok(behaviors.extensions.jsonish('False') === false, 'Cammel');
+            assert.ok(behaviors.extensions.jsonish('  TrUe') === true, 'Space before');
+            assert.ok(behaviors.extensions.jsonish('false   ') === false, 'Space after');
+         });
+
+         QUnit.test('Strings', function(assert) {
+            assert.ok(behaviors.extensions.jsonish('"test"') === 'test', 'Double');
+            assert.ok(behaviors.extensions.jsonish("'test'") === 'test', 'Single');
+            assert.ok(behaviors.extensions.jsonish('   "test"') === 'test', 'Space before');
+            assert.ok(behaviors.extensions.jsonish('"test"   ') === 'test', 'Space after');
+            assert.ok(behaviors.extensions.jsonish("'te\\'s\"t'") === 'te\'s"t', 'Escaped single');
+            assert.ok(behaviors.extensions.jsonish('"te\\"s\'t"') === 'te"s\'t', 'Escaped double');
+            assert.ok(behaviors.extensions.jsonish("'te\\\\\\'s\"t'") === 'te\\\'s"t', 'Multi escape');
+         });
+
+         QUnit.test('Arrays', function(assert) {
+            assert.ok(behaviors.extensions.jsonish('[]').length === 0, 'Empty');
+            assert.ok(behaviors.extensions.jsonish('[1]')[0] === 1, 'Number');
+            assert.ok(behaviors.extensions.jsonish('[1, "test"]')[1] === 'test', 'String');
+            assert.ok(behaviors.extensions.jsonish("['test', 1, []]")[2].length === 0, 'Arrays');
+            assert.ok(behaviors.extensions.jsonish('[1, [[]]]')[1][0].length === 0, 'Nested arrays');
+            assert.ok(behaviors.extensions.jsonish('[[1, 2, 3], 2]')[0][1] === 2, 'Nested array value');
+            assert.ok(behaviors.extensions.jsonish('[1, {}]')[1], 'Object');
+            assert.ok(behaviors.extensions.jsonish('[1, {value: 1}]')[1].value === 1, 'Object value');
+            assert.ok(behaviors.extensions.jsonish('[1, {value: []}]')[1].value.length === 0, 'Object array');
+         });
+
+         QUnit.test('Objects', function(assert) {
+            assert.ok(behaviors.extensions.jsonish('{}'), 'Not nothing');
+            assert.ok(behaviors.extensions.jsonish('{value: 1}').value === 1, 'Number');
+            assert.ok(behaviors.extensions.jsonish('{"value": 1}').value === 1, 'Quoted number');
+            assert.ok(behaviors.extensions.jsonish('{value: "1"}').value === '1', 'String');
+            assert.ok(behaviors.extensions.jsonish('{value: []}').value.length === 0, 'Array');
+            assert.ok(behaviors.extensions.jsonish('{value: false}').value === false, 'Boolean');
+            assert.ok(behaviors.extensions.jsonish('{value: {}}').value, 'Object');
+            assert.ok(behaviors.extensions.jsonish('{test: {}, value: {value: 1}}').value.value, 'Nested');
+         });
+      </script>
+   </body>
+</html>

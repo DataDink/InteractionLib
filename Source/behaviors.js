@@ -16,14 +16,6 @@
 		return false;
 	}
 
-	/* Ensures a collection is an array */
-	function toArray(collection) {
-		var retarray = [];
-		if (!collection) { return retarray; }
-		if ('length' in collection) { for (var i = 0; i < collection.length; i++) { retarray.push(collection[i]); } }
-		else { for (var i = 0; i in collection; i++) { retarray.push(collection[i]); } }
-		return retarray;
-	}
 	/* Caches the length to "count" for performance as some collections re-evaluate for each call to .length */
 	function countOf(collection) { collection._cachedCount = collection._cachedCount || collection.length; return collection._cachedCount; }
 
@@ -33,12 +25,13 @@
 		var selector = '[' + ((!behavior) ? settings.attributes.behaviors : settings.attributes.behaviors + '~=' + behavior) + ']';
 		var containerMatches = (!behavior) || (container.getAttribute(settings.attributes.behaviors) || '').indexOf(new RegExp('\b' + behavior + '\b')) >= 0;
 		var results = (!containerMatches) ? [] : [container];
-		var finds = toArray(container.querySelectorAll(selector));
+		var finds = window.behaviors.extensions.toarray(container.querySelectorAll(selector));
 		for (var i = 0; i < countOf(finds); i++) { results.push(finds[i]); }
 		return results;
 	}
 
 	function wireBehavior(behavior, element) {
+		if (document.body && document.body.contains && !document.body.contains(element)) { return; }
 		element[' applied-behaviors '] = element[' applied-behaviors '] || {};
 		if (element[' applied-behaviors '][behavior]) { return false; }
 		var func = __source[behavior];
@@ -47,7 +40,7 @@
 		var configAttr = settings.attributes.configuration.replace('{name}', behavior.toLowerCase());
 		var config = element.getAttribute(configAttr);
 		if (!config) { func.call(element); }
-		else { func.call(element, JSON.parse(config)); }
+		else { func.call(element, window.behaviors.extensions.jsonish(config)); }
 		return true;
 	}
 
@@ -78,6 +71,100 @@
 
 	window.behaviors = window.Element.prototype.behaviors;
 
+	/****************************************** extensions ***************************************************/
+	window.behaviors.extensions = {};
+	window.behaviors.extensions.toarray = function(obj) {
+	   var arr = [];
+		if (!obj) { return arr; }
+	   if ('length' in obj) { for (var i = 0; i < obj.length; i++) { arr.push(obj[i]); } } // faster
+		else { for (var i = 0; i in obj; i++) { arr.push(obj[i]); } } // slower
+	   return arr;
+	};
+
+	/****************************************** jsonish ******************************************************/
+	window.behaviors.extensions.jsonish = function(str) { return readvalue({buff: str}); };
+
+	function readvalue(data) {
+		if (data.buff.match(/^\s*('|")/g)) { return readstring(data); }
+		if (data.buff.match(/^\s*\d+/g)) { return readnumber(data); }
+		if (data.buff.match(/^\s*(true|false)\b/gi)) { return readbool(data); }
+		if (data.buff.match(/^\s*\[/g)) { return readarray(data); }
+		if (data.buff.match(/^\s*\{/g)) { return readobj(data); }
+	}
+
+	function isescaped(str, at) {
+		var count = 0;
+		while (--at >= 0 && str[at] === '\\') { count++; }
+		return (count % 2) !== 0;
+	}
+
+	function readstring(data) {
+		var at = -1;
+		data.buff = data.buff.replace(/^\s+/g, '');
+		var delim = data.buff[0];
+		data.buff = data.buff.substr(1);
+		while (++at < data.buff.length && data.buff[at] !== delim || isescaped(data.buff, at)) {}
+		var value = data.buff.substring(0, at);
+		data.buff = data.buff.substr(at + 1);
+		return value.replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+	}
+
+	function readnumber(data) {
+		var str = data.buff.match(/^\s*\d+(\.\d+)?/g)[0];
+		data.buff = data.buff.substr(str.length);
+		return parseFloat(str.replace(/^\s+/g, ''));
+	}
+
+	function readbool(data) {
+		var str = data.buff.match(/^\s*(true|false)/gi)[0];
+		data.buff = data.buff.substr(str.length);
+		return str.toLowerCase().indexOf('true') >= 0;
+	}
+
+	function readarray(data) {
+		var arr = [];
+		data.buff = data.buff.replace(/^\s*\[/, '');
+		if (data.buff.match(/^\s*\]/g)) {
+			data.buff = data.buff.replace(/^\s*\]/g, '');
+			return arr;
+		}
+		do {
+			data.buff = data.buff.replace(/^\s*,/g, '');
+			arr.push(readvalue(data));
+		} while(data.buff.match(/^\s*,/g));
+		data.buff = data.buff.replace(/^\s*\]/g, '');
+		return arr;
+	}
+
+	function readname(data) {
+		var value = data.buff.match(/^\s*('|")/g) ? readstring(data) : false;
+		if (value === false) {
+			value = data.buff.match(/^\s*[^:\s]+/g)[0];
+			data.buff = data.buff.substr(value.length);
+			value = value.replace(/^\s+/g, '');
+		}
+		data.buff = data.buff.replace(/^\s*:/g, '');
+		return value;
+	}
+
+	function readobj(data) {
+		var obj = {};
+		data.buff = data.buff.replace(/^\s*\{/g, '');
+		if (data.buff.match(/^\s*\}/g)) {
+			data.buff = data.buff.replace(/^\s*\}/g, '');
+			return obj;
+		}
+		do {
+			data.buff = data.buff.replace(/^\s*,/g, '');
+			var name = readname(data);
+			var value = readvalue(data);
+			obj[name] = value;
+		} while (data.buff.match(/^\s*,/g));
+		data.buff = data.buff.replace(/^\s*\}/g, '');
+		return obj;
+	}
+
+
 	/****************************************** DOM Watcher Wireups *****************************************/
 	function useMutationObserver() {
 		if (!window.MutationObserver) { return false; }
@@ -86,7 +173,7 @@
 			for (var i = 0; i < countOf(mutations); i++) {
 				var mutation = mutations[i];
 				if (!mutation.addedNodes || !mutation.addedNodes[0]) { continue; }
-				var nodes = toArray(mutation.addedNodes);
+				var nodes = window.behaviors.extensions.toarray(mutation.addedNodes);
 				for (var n = 0; n < countOf(nodes); n++) { wireContainer(nodes[n]); }
 			}
 		});
@@ -120,7 +207,7 @@
 			wireContainer(node);
 		}
 		function infestDOM(nodes) { /* TODO: Add a disable for this */
-			nodes = toArray(nodes);
+			nodes = window.behaviors.extensions.toarray(nodes);
 			for (var i = 0; i < countOf(nodes); i++) {
 				var node = nodes[i];
 				if (!node.attachEvent) { continue; }

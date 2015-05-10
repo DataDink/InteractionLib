@@ -1,6 +1,5 @@
 (function() {
    var parser = document.createElement('div');
-   window.behaviors.extensions = window.behaviors.extensions || {};
    window.behaviors.extensions.parse = function(html) {
       var content = [];
       parser.innerHTML = html;

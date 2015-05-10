@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Configuration</title>
+      <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+      <script src="../../builds/behaviors.js"></script>
+   </head>
+   <body>
+      <div data-behavior="cfga" data-cfga-config="{}"></div>
+      <div data-behavior="cfgb" data-cfgb-config="1"></div>
+      <div data-behavior="cfgc cfgd" data-cfgc-config="['c']" data-cfgd-config="'d'"></div>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+      <script>
+         var configs = {};
+         behaviors.add('cfga', function(cfg) { configs.cfga = cfg; });
+         behaviors.add('cfgb', function(cfg) { configs.cfgb = cfg; });
+         behaviors.add('cfgc', function(cfg) { configs.cfgc = cfg; });
+         behaviors.add('cfgd', function(cfg) { configs.cfgd = cfg; });
+
+         setTimeout(function() {
+            QUnit.test('Tests', function(assert) {
+               assert.ok(!configs.cfga.test, 'Object');
+               assert.ok(configs.cfgb === 1, 'Number');
+               assert.ok(configs.cfgc[0] === 'c', 'Array');
+               assert.ok(configs.cfgd === 'd', 'String');
+            });
+         }, 100);
+      </script>
+   </body>
+</html>

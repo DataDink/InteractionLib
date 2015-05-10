@@ -1,4 +1,3 @@
-window.behaviors.extensions = window.behaviors.extensions || {};
 window.behaviors.extensions.trigger = function(elements, name, detail) {
    var evt = new CustomEvent(name, { bubbles: true, detail: detail });
    if (elements.dispatchEvent) { elements.dispatchEvent(evt); }

@@ -1,4 +1,3 @@
-window.behaviors.extensions = window.behaviors.extensions || {};
 window.behaviors.extensions.values = function(input) {
    var name = input.getAttribute('name') || input.getAttribute('data-name');
    if (!name) { return false; }

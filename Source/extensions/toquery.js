@@ -1,4 +1,3 @@
-window.behaviors.extensions = window.behaviors.extensions || {};
 window.behaviors.extensions.toquery = function(obj) {
    var items = [];
    for (var member in obj) {

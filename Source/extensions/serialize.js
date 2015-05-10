@@ -1,4 +1,3 @@
-window.behaviors.extensions = window.behaviors.extensions || {};
 window.behaviors.extensions.serialize = function(form) {
    var inputs = window.behaviors.extensions.toarray(form.querySelectorAll('[name], [data-name]'));
    input.unshift(form);
