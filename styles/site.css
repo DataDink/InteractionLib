@@ -238,7 +238,6 @@ code > pre {
 }
 dl {
   display: block;
-  white-space: nowrap;
 }
 dl > dt,
 dl > dd {
