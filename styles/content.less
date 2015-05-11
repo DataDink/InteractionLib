@@ -57,3 +57,31 @@ code {
       background: white;
    }
 }
+
+dl {
+   display: block;
+   white-space: nowrap;
+
+   & > dt, > dd {
+      float: left;
+      margin: 0px;
+      padding: 0px 10px 5px 0px;
+   }
+
+   & > dt {
+      width: 25%;
+      &:after { content: ':'; }
+   }
+
+   & > dd {
+      width: 75%;
+   }
+}
+
+td, th {
+   text-align: left;
+   border-bottom: 1px dotted @content-fg;
+   width: 50px;
+   margin: 0px;
+   padding: 0px 5px 5px;
+}

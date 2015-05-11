@@ -236,3 +236,30 @@ code > pre {
   box-shadow: inset 5px 5px 25px -10px black;
   background: white;
 }
+dl {
+  display: block;
+  white-space: nowrap;
+}
+dl > dt,
+dl > dd {
+  float: left;
+  margin: 0px;
+  padding: 0px 10px 5px 0px;
+}
+dl > dt {
+  width: 25%;
+}
+dl > dt:after {
+  content: ':';
+}
+dl > dd {
+  width: 75%;
+}
+td,
+th {
+  text-align: left;
+  border-bottom: 1px dotted #45525a;
+  width: 50px;
+  margin: 0px;
+  padding: 0px 5px 5px;
+}
