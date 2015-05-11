@@ -22,6 +22,7 @@
       var method = (coordinator.getAttribute(window.behaviors.ajax.frame.attributes.mode) || window.behaviors.ajax.frame.modes.replaceContent).toLowerCase();
 
       var render = (function(targets, method) { return function(e) {
+         if (e.stopPropagation) { e.stopPropagation(); }
          var content = e.detail.response;
          for (var t = 0; t < targets.length; t++) {
             if (method === window.behaviors.ajax.frame.modes.appendContent) { append(targets[t], content); }
