@@ -10,7 +10,7 @@ window.behaviors.add('ajax-nav', function() {
       var request = new window.behaviors.extensions.ajax();
       request.uri = uri;
       request.onsuccess = function() {
-         var submit = window.behaviors.ajax.submit.events.submit;
+         var submit = window.behaviors.ajax.form.events.success;
          var response = {
             form: container, method: 'get', uri: request.uri,
             status: this.status,
