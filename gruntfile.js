@@ -2,34 +2,28 @@ module.exports = function(grunt) {
    grunt.initConfig({
       concat: {
          options: { separator: ';\r\n\r\n' },
-         behaviors: {
+         site: {
             src: [
-               'source/polyfills/addEventListener.js',
-               'source/polyfills/CustomEvent.js',
-               'source/polyfills/matches.js',
-               'source/behaviors.js'
+               'scripts/behaviors/*.js'
             ],
-            dest: 'builds/behaviors.js'
-         },
-         interactionLib: {
-            src: [
-               'source/polyfills/addEventListener.js',
-               'source/polyfills/CustomEvent.js',
-               'source/polyfills/matches.js',
-               'source/behaviors.js',
-               'source/extensions/*.js',
-               'source/behaviors/*.js'
-            ],
-            dest: 'builds/interaction-lib.js'
+            dest: 'scripts/site.js'
          }
       },
       uglify: {
-         behaviors: { src: 'builds/behaviors.js', dest: 'builds/behaviors.min.js' },
-         interactionLib: { src: 'builds/interaction-lib.js', dest: 'builds/interaction-lib.min.js' }
+         site: { src: 'scripts/site.js', dest: 'scripts/site.min.js' }
+      },
+      less: {
+         site: {
+            compress: true,
+            files: {
+               'styles/site.css' : 'styles/site.less'
+            }
+         }
       }
    });
 
    grunt.loadNpmTasks('grunt-contrib-concat');
    grunt.loadNpmTasks('grunt-contrib-uglify');
-   grunt.registerTask('build-all', ['concat', 'uglify']);
+   grunt.loadNpmTasks('grunt-contrib-less');
+   grunt.registerTask('build-all', ['concat', 'uglify', 'less']);
 };

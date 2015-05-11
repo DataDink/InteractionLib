@@ -1,0 +1,79 @@
+<section>
+   <header><img src="images/title.png" /></header>
+
+   <aside>
+      <header>Places To Go</header>
+      <nav>
+         <a data-behavior="ajax-nav" href="views/documentation.html" data-nav-target="#viewport">Documentation</a>
+         <a data-behavior="ajax-nav" href="views/downloads.html" data-nav-target="#viewport">Downloads</a>
+         <a href="https://github.com/DataDink/InteractionLib/issues" target="_blank">Report A Bug</a>
+         <a href="https://github.com/DataDink/InteractionLib" target="_blank">Source Codes</a>
+         <a href="https://github.com/DataDink/InteractionLib/pulls" target="_blank">Contribute</a>
+         <a href="http://markonthenet.com/contact.htm" target="_blank">Contact Me</a>
+      </nav>
+   </aside>
+
+   <article>
+      <header>About Interaction Lib</header>
+      <p>
+         Interaction Lib is a stand-alone prototyping framework intended to bridge the gap
+         between your document and its functionality. Its primary function is to allow
+         interactions to be wired up to your markup declaratively using
+         a common set of data attributes.
+      </p>
+      <p>
+         Interaction Lib has also been coupled with a basic set of ajax functionality
+         modeled after existing DOM form/frame patterns offering codless SPA-like interactivity.
+         If jQuery is loaded, Interaction Lib will also integrate with your existing
+         jQuery plugins allowing pages to be written and configured with little to no
+         need for site-specific javascript.
+      </p>
+      <p>
+         The intention is to optimize ui prototyping by supporting quick wireups for
+         existing and custom interaction plugins.
+      </p>
+   </article>
+</section>
+
+<h1>Getting Started <small>::crash course::</small></h1>
+
+<section>
+   <article>
+      <header>Creating New Behaviors</header>
+
+      <code>
+         <header>jQuery</header>
+         <pre>
+$.fn['alert-click'] = function() {
+   return $(this).each(function() {
+      $(this).on('click', function() {
+         alert('I've Been Clicked!');
+      });
+   });
+};
+         </pre>
+      </code>
+
+      <code>
+         <header>Raw javascript</header>
+         <pre>
+behaviors.add('alert-click', function() {
+   this.addEventListener('click', function() {
+      alert('I've Been Clicked!');
+   });
+});
+         </pre>
+      </code>
+   </article>
+
+   <article>
+      <header>Adding Behaviors To Elements</header>
+
+      <code>
+         <header>HTML</header>
+         <pre>
+&lt;div data-behavior="alert-click"&gt;Click Me Baby!&lt;/div&gt;
+         </pre>
+      </code>
+   </article>
+</section>

@@ -1,0 +1,59 @@
+body > main {
+
+   & > h1 {
+      background: @outline-bg;
+      color: @outline-fg;
+      width: @content-width + 50px;
+      margin: 25px -75px;
+      padding: 30px 75px;
+      font-weight: normal;
+   }
+
+   & > section {
+      & > header {
+         display: block;
+         text-align: center;
+         clear: both;
+         margin: 0px 0px 50px;
+         padding: 0px;
+      }
+
+      & > aside {
+         & > header {
+            border-bottom: 1px solid @content-fg;
+            padding: 10px 50px;
+            margin: 0px;
+         }
+      }
+
+      & > article {
+         & > header {
+            font-size: 1.25em;
+            font-weight: bold;
+         }
+      }
+   }
+}
+
+code {
+   margin: 0px;
+   padding: 10px 25px 0px;
+
+   & > header {
+      &:before { content: '--'; }
+      &:after { content: '--'; }
+      text-decoration: underline;
+      font-style: italic;
+      padding: 10px 0px 5px;
+      margin: 0px;
+      display: block;
+   }
+
+   & > pre {
+      border: 1px solid @content-mg;
+      padding: 25px;
+      border-radius: 4px;
+      box-shadow: inset 5px 5px 25px -10px black;
+      background: white;
+   }
+}

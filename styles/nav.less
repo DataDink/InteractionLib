@@ -1,0 +1,46 @@
+@nav-height: 50px;
+
+body > header > nav {
+   position: absolute;
+   left: 0px; right: 0px;
+   top: @header-height;
+   margin: 0px auto;
+   text-align: center;
+   white-space: nowrap;
+
+   & > a {
+      &, &:hover, &:focus, &:visited, &:active {
+         display: inline-block;
+         background: none repeat scroll 0 0 black;
+         box-shadow: 0 -75px 100px -100px @outline-fg inset;
+         padding: 5px 10px;
+         margin: 0px -1px;
+         font-family: "Racing Sans One",cursive;
+         font-size: 18px;
+         color: @outline-fg;
+         text-decoration: none;
+         transition: all .25s ease;
+      }
+
+      &:hover {
+         color: @nav-hl;
+      }
+   }
+}
+
+aside > nav {
+   & > a {
+      &, &:hover, &:focus, &:visited, &:active {
+         display: block;
+         background: transparent;
+         color: @content-fg;
+         text-decoration: none;
+         padding: 5px 25px;
+         margin: 0px;
+      }
+
+      &:hover {
+         background: @content-mg;
+      }
+   }
+}

@@ -1,0 +1,24 @@
+.branded {
+   position: relative;
+   display: inline-block;
+   margin: 0px; padding: 0px;
+   width: 250px;
+   height: 30px;
+
+   &:before, &:after {
+       content: "Interaction Lib";
+       font-family: "Racing Sans One",cursive;
+       position: absolute;
+       display: block;
+       left: 0px; right: 0px;
+       top: 0px; bottom: 0px;
+       text-align: center;
+       line-height: 30px;
+       font-weight: normal;
+   }
+
+   &:before { font-size: 27px; color: grey; }
+   &:after { font-size: 25px; color: white; }
+}
+
+body > header > .branded { float: left; }

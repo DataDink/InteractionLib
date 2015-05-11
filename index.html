@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>Interaction Lib</title>
+      <link href="styles/site.css" rel="stylesheet" type="text/css" />
+      <script src="builds/interaction-lib.js"></script>
+      <script src="scripts/site.js"></script>
+      <script>
+         (function() {
+            var semantics = ['main', 'section', 'article', 'aside', 'dd', 'dt', 'dl', 'header', 'footer', 'code'];
+            for (var i = 0; i < semantics.length; i++) { document.createElement(semantics[i]); }
+         })();
+      </script>
+   </head>
+   <body>
+      <main id="viewport" data-behavior="ajax-view ajax-frame" data-href="views/home.html"></main>
+      <header>
+         <h1 class="branded"></h1>
+         <form data-behavior="search">
+            <label>
+               Search
+               <input type="search" name="query" title="" />
+            </label>
+            <button type="submit">&gt;</button>
+         </form>
+         <nav>
+            <a href="views/home.html" data-behavior="ajax-nav" data-nav-target="#viewport">Home</a>
+            <a href="views/documentation.html" data-behavior="ajax-nav" data-nav-target="#viewport">Documentation</a>
+            <a href="views/downloads.html" data-behavior="ajax-nav" data-nav-target="#viewport">Downloads</a>
+         </nav>
+      </header>
+      <footer>
+         Interaction Lib | version 2.1.1 | DataDink
+      </footer>
+   </body>
+</html>

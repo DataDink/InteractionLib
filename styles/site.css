@@ -1,0 +1,237 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro|Racing+Sans+One|Montserrat);
+.branded {
+  position: relative;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  width: 250px;
+  height: 30px;
+}
+.branded:before,
+.branded:after {
+  content: "Interaction Lib";
+  font-family: "Racing Sans One", cursive;
+  position: absolute;
+  display: block;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: normal;
+}
+.branded:before {
+  font-size: 27px;
+  color: grey;
+}
+.branded:after {
+  font-size: 25px;
+  color: white;
+}
+body > header > .branded {
+  float: left;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  min-height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  min-height: 100%;
+  margin: 0px;
+  padding: 50px 0px 50px;
+  background: url('../images/background.jpg');
+  color: #45525a;
+  font-family: "Source Sans Pro", sans-serif;
+}
+body > header,
+body > footer {
+  display: block;
+  position: fixed;
+  margin: 0px;
+  padding: 10px 25px;
+  left: 0px;
+  right: 0px;
+  background: #000000;
+  color: #45525a;
+}
+body > header {
+  height: 50px;
+  top: 0px;
+}
+body > footer {
+  height: 50px;
+  bottom: 0px;
+}
+body > main {
+  display: block;
+  background: #e6e8e3;
+  min-width: 1000px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 50px auto;
+  border-radius: 4px;
+  padding: 50px;
+}
+body > main > section {
+  display: block;
+}
+body > main > section:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+body > main > section > aside,
+body > main > section > article {
+  display: table-cell;
+  padding: 0px;
+}
+body > main > section > aside {
+  white-space: nowrap;
+  border: 1px solid #45525a;
+  border-radius: 4px;
+}
+body > main > section > aside > * {
+  display: block;
+}
+body > main > section > article {
+  padding: 0px 25px;
+}
+body > header > nav {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 50px;
+  margin: 0px auto;
+  text-align: center;
+  white-space: nowrap;
+}
+body > header > nav > a,
+body > header > nav > a:hover,
+body > header > nav > a:focus,
+body > header > nav > a:visited,
+body > header > nav > a:active {
+  display: inline-block;
+  background: none repeat scroll 0 0 black;
+  box-shadow: 0 -75px 100px -100px #e6e8e3 inset;
+  padding: 5px 10px;
+  margin: 0px -1px;
+  font-family: "Racing Sans One", cursive;
+  font-size: 18px;
+  color: #e6e8e3;
+  text-decoration: none;
+  transition: all .25s ease;
+}
+body > header > nav > a:hover {
+  color: #c69d06;
+}
+aside > nav > a,
+aside > nav > a:hover,
+aside > nav > a:focus,
+aside > nav > a:visited,
+aside > nav > a:active {
+  display: block;
+  background: transparent;
+  color: #45525a;
+  text-decoration: none;
+  padding: 5px 25px;
+  margin: 0px;
+}
+aside > nav > a:hover {
+  background: #d6d8d3;
+}
+body > header > form {
+  display: inline-block;
+  padding: 0px;
+  margin: 0px;
+  height: 30px;
+  float: right;
+  line-height: 22px;
+  font-size: 18px;
+}
+body > header > form input,
+body > header > form button,
+body > header > form input:focus,
+body > header > form button:focus,
+body > header > form input:hover,
+body > header > form button:hover,
+body > header > form input:active,
+body > header > form button:active {
+  display: inline-block;
+  background: transparent;
+  border: 1px solid #45525a;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 3px 10px;
+  margin: 0px -5px 0px 0px;
+  -webkit-outline: none;
+  -moz-outline: none;
+  outline: none;
+  color: #45525a;
+}
+body > header > form input {
+  border-radius: 100px 0px 0px 100px;
+  width: 200px;
+}
+body > header > form button,
+body > header > form button:focus,
+body > header > form button:hover,
+body > header > form button:active {
+  cursor: pointer;
+}
+body > header > form input:hover,
+body > header > form button:hover {
+  border-color: #c69d06;
+}
+body > main > h1 {
+  background: #000000;
+  color: #e6e8e3;
+  width: 1050px;
+  margin: 25px -75px;
+  padding: 30px 75px;
+  font-weight: normal;
+}
+body > main > section > header {
+  display: block;
+  text-align: center;
+  clear: both;
+  margin: 0px 0px 50px;
+  padding: 0px;
+}
+body > main > section > aside > header {
+  border-bottom: 1px solid #45525a;
+  padding: 10px 50px;
+  margin: 0px;
+}
+body > main > section > article > header {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+code {
+  margin: 0px;
+  padding: 10px 25px 0px;
+}
+code > header {
+  text-decoration: underline;
+  font-style: italic;
+  padding: 10px 0px 5px;
+  margin: 0px;
+  display: block;
+}
+code > header:before {
+  content: '--';
+}
+code > header:after {
+  content: '--';
+}
+code > pre {
+  border: 1px solid #d6d8d3;
+  padding: 25px;
+  border-radius: 4px;
+  box-shadow: inset 5px 5px 25px -10px black;
+  background: white;
+}
