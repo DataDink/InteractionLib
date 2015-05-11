@@ -37,7 +37,7 @@
          container.setAttribute('data-behavior', 'ajax-nav');;
          container.setAttribute('data-href', 'test');
          data.responseText = '<div id="test"></div>';
-         container.addEventListener(behaviors.ajax.submit.events.submit, function(e) {data.response = e.detail;});
+         container.addEventListener(behaviors.ajax.form.events.success, function(e) {data.response = e.detail;});
          document.body.appendChild(container);
 
          setTimeout(function() {
