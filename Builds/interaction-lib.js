@@ -565,6 +565,7 @@ window.behaviors.extensions.values = function(input) {
    });
 
    function send(e) {
+      e.returnValue = false;
       if (e.preventDefault) { e.preventDefault(); }
       if (e.stopPropagation) { e.stopPropagation(); }
       var form = this;
@@ -664,6 +665,7 @@ window.behaviors.add('ajax-nav', function() {
    var container = this;
    var event = container.getAttribute('data-nav-event') || 'click';
    container.addEventListener(event, function(e) {
+      e.returnValue = false;
       if (e.preventDefault) { e.preventDefault(); }
       if (e.stopPropagation) { e.stopPropagation(); }
       var uri = container.getAttribute('href') || container.getAttribute('data-href');
@@ -684,6 +686,7 @@ window.behaviors.add('ajax-nav', function() {
          }
       };
       request.send();
+      return false;
    })
 })
 ;

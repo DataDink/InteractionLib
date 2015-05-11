@@ -19,6 +19,7 @@
    });
 
    function send(e) {
+      e.returnValue = false;
       if (e.preventDefault) { e.preventDefault(); }
       if (e.stopPropagation) { e.stopPropagation(); }
       var form = this;
