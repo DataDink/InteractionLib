@@ -4,14 +4,64 @@
    <dt>What it does</dt>      <dd>Invokes one or more behaviors on the element. (Configures an element with one or more behaviors)</dd>
    <dt>Works on</dt>          <dd>Any element within the document. This will function on the body and any of its contents.</dd>
    <dt>Accepted Values</dt>   <dd>One or more behavior or jQuery plugin name(s) (case sensitive). All behaviors should be space delimited. (Behaviors with spaces in their names won't be found)</dd>
+</dl>
 
-Sample usage:
-<input type="text" data-behavior="date-picker" />
+<p>
+   <em>Sample Usage</em><br />
+   Click to set a date:
+   <div data-behavior="date-picker">
+      <input type="text"/>
+      <div class="calendar sample">
+         <header>Month</header>
+         <ul>
+            <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li>
+            <li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li>
+            <li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li>
+            <li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li>
+         </ul>
+      </div>
+      <style>
+         .calendar.sample {
+            display: block;
+            width: 200px;
+            border: 1px solid black;
+            background: white;
+            position: absolute;
+         }
 
-When using InteractionLib the data-behavior attribute is the primary method for configuring elements in the DOM with behavior functionality. A behavior is a chunk of javascript functionality that, when applied to an element or group of elements, will configure it to behave in a certain manner.
+         .calendar.sample > header {
+            display: block;
+            background: black;
+            color: white;
+            text-align: center;
+         }
 
-In the above sample usage a text input will have a behavior called 'date-picker' applied to it. The demonstration below has been given this same attribute. When clicked, it will show a calendar and set the value of the input when a date is selected.
-Click to set a date:
+         .calendar.sample > ul {
+            display: block;
+            margin: 0px; padding: 0px;
+            list-style: none;
+            position: relative;
+            text-align: center;
+         }
+
+         .calendar.sample > ul > li {
+            display: block;
+            float: left;
+            margin: 0px;
+            padding: 3px 5px;
+            width: 14%;
+         }
+      </style>
+   </div>
+</p>
+
+<p>
+   When using InteractionLib the data-behavior attribute is the primary method for configuring elements in the DOM with behavior functionality. A behavior is a chunk of javascript functionality that, when applied to an element or group of elements, will configure it to behave in a certain manner.
+</p>
+
+<p>
+   In the above sample usage a text input will have a behavior called 'date-picker' applied to it. The demonstration below has been given this same attribute. When clicked, it will show a calendar and set the value of the input when a date is selected.
+</p>
 
 This is the core functionality and purpose of InteractionLib. The data-behavior attribute is the bridge between your document and its functionality. It allows you to assign functionality to your document directly from your markup and replaces the need to put a block of script somewhere that searches for your content in order to apply your functionality to it.
 
