@@ -207,6 +207,7 @@ body > main > section > aside > header {
   border-bottom: 1px solid #45525a;
   padding: 10px 50px;
   margin: 0px;
+  font-weight: bold;
 }
 body > main > section > article > header {
   font-size: 1.25em;
