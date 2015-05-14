@@ -1,7 +1,7 @@
 <header>data-behavior attribute</header>
 
 <dl>
-   <dt>What it does</dt>      <dd>Invokes one or more behaviors on the element. (Configures an element with one or more behaviors)</dd>
+   <dt>What it does</dt>      <dd>Invokes/Configures one or more behaviors on the element.</dd>
    <dt>Works on</dt>          <dd>Any element within the document. This will function on the body and any of its contents.</dd>
    <dt>Accepted Values</dt>   <dd>One or more behavior or jQuery plugin name(s) (case sensitive). All behaviors should be space delimited. (Behaviors with spaces in their names won't be found)</dd>
 </dl>
@@ -50,48 +50,4 @@ behaviors.add('date-picker', function() {
 <p>
    InteractionLib also monitors the document for changes. This means that even if you ajax-in some content to your page
    as you would in a SPA you don't need to worry about getting the new content wired up.
-</p>
-
-<header>
-   What are behaviors?
-</header>
-
-<p>
-   Any kind of interaction that can be observed on a web page can be given a behavior that defines how the page and its
-   elements react. For instance: if you have a multi-element structure on a page such as an accordion you know that when
-   the title of one of the accordion sections is clicked it should either show or hide the corresponding section's content.
-   The behavior here would most likely be called something like "accordion". This behavior would most likely expect a
-   certain structure to exist, listen for click events on the titles of each section, and then update the classes on the
-   corresponding section content in order to show and hide it.
-</p>
-
-<p>
-   If you have developed in javascript for any amount of time then you are already accustomed to the idea of listening
-   to events and responding to them with handlers. Behaviors are the orchestration of any number of events and handlers
-   that correspond to a given structure in the markup to produce an interaction for the user.
-</p>
-
-<p>
-   Please see behaviors.add for more information on how to add and create new behaviors.
-</p>
-
-<header>
-   Behaviors and jQuery
-</header>
-
-<p>
-   jQuery is a commonly used plugin library that extends the core javascript library available to the developer for
-   creating functionality on a page. Like behaviors, plugins will often take a structure on the page and apply handlers
-   to create a user interaction. The gap Interaction Lib fills is a declarative means of joining your DOM to your plugins.
-</p>
-
-<p>
-   If jQuery is loaded prior to InteractionLib then all behaviors will be added to and read from jQuery's library of plugins.
-   For example: if you have a jQuery plugin named "doSomething" and in your markup you place a 'data-behavior="doSomething"'
-   on an element, the jQuery plugin "doSomething" will be invoked on that element when the page loads. This would be like
-   executing $(element).doSomething() in javascript where "element" is the element on the page that is being configured.
-</p>
-
-<p>
-   Please see data-{behavior}-config for more information on how to configure jQuery plugins with behaviors.
 </p>

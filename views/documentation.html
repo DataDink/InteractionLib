@@ -1,17 +1,14 @@
 <section>
    <header><img src="images/title.png" /></header>
-   <aside>
+   <aside data-behavior="ajax-nav" data-nav-target="#article">
       <header>Framework</header>
-      <nav data-behavior="ajax-nav" data-nav-target="#article" >
-         <a href="views/data-behavior.html">data-behavior</a>
+      <nav>
+         <a href="views/behaviors.html">Behaviors</a>
       </nav>
-      <header>Attributes</header>
-      <nav data-behavior="ajax-nav" data-nav-target="#article">
-         <a href="views/data-behavior.html">data-behavior</a>
-      </nav>
-      <header>Events</header>
-      <nav data-behavior="ajax-nav" data-nav-target="#article">
-         <a href="views/data-behavior.html">data-behavior</a>
+      <header>Behaviors</header>
+      <nav>
+         <a href="views/ajax-nav.html">ajax-nav</a>
+         <a href="views/ajax-view.html">ajax-view</a>
       </nav>
    </aside>
    <article id="article" data-behavior="ajax-frame ajax-view" data-href="views/info.html"></article>

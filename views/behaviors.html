@@ -1,0 +1,76 @@
+<header>
+   Behaviors
+</header>
+
+<p>
+   Any kind of interaction that can be observed on a web page can be given a behavior that defines how the page and its
+   elements react. For instance: if you have a multi-element structure on a page such as an accordion you know that when
+   the title of one of the accordion sections is clicked it should either show or hide the corresponding section's content.
+   The behavior here would most likely be called something like "accordion". This behavior would most likely expect a
+   certain structure to exist, listen for click events on the titles of each section, and then update the classes on the
+   corresponding section content in order to show and hide it.
+</p>
+
+<p>
+   If you have developed in javascript for any amount of time then you are already accustomed to the idea of listening
+   to events and responding to them with handlers. Behaviors are the orchestration of any number of events and handlers
+   that correspond to a given structure in the markup to produce an interaction for the user.
+</p>
+
+<p>
+   You can add new behaviors using the behaviors.add function:
+</p>
+
+<code>
+   <header>javascript</header>
+   <pre>
+behaviors.add('my-behavior', function() {
+   var element = this;
+   element.addEventListener('click', function() { alert('clicked'); });
+});
+   </pre>
+</code>
+
+<p>
+   And then wire it up by using the data-behavior attribute in the DOM:
+</p>
+
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;div data-behavior="my-behavior"&gt;Clicky&lt;/div&gt;
+   </pre>
+</code>
+
+<header>
+   Behaviors and jQuery
+</header>
+
+<p>
+   jQuery is a commonly used plugin library that extends the core javascript library available to the developer for
+   creating functionality on a page. Like behaviors, plugins will often take a structure on the page and apply handlers
+   to create a user interaction. The gap Interaction Lib fills is a declarative means of joining your DOM to your plugins.
+</p>
+
+<p>
+   If, for example, you have downloaded a jQuery plugin called "datePicker" and added it to your website. The only thing
+   you need to do to hook it up to a textbox is reference it in the data-behavior attribute.
+</p>
+
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;input type="text" data-behavior="datePicker" /&gt;
+   </pre>
+</code>
+
+<p>
+   This would be the equivalent of the following wireup in code:
+</p>
+
+<code>
+   <header>javascript</header>
+   <pre>
+$('input').datePicker();
+   </pre>
+</code>

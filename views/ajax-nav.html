@@ -1,0 +1,37 @@
+<header>
+   ajax-nav
+</header>
+
+<p>
+   Responds to <em>click</em> or other specified event to trigger an ajax load of content specified by an <em>href</em>
+   or <em>data-href</em> attribute. The loaded content will trigger an <em>ajax-success</em> event that can be directed
+   to an <em>ajax-frame</em> using a <em>target</em> or <em>data-nav-target</em> attribute.
+</p>
+
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;nav&gt;
+   &lt;a data-behavior="ajax-nav" target="#view" href="views/my-view.html" /&gt;
+   &lt;a data-behavior="ajax-nav" target="#view" href="views/my-other-view.html" /&gt;
+&lt;/nav&gt;
+
+&lt;div id="view" data-behavior="ajax-frame"&gt;&lt;/div&gt;
+   </pre>
+</code>
+
+<p>
+   You can also add the ajax-nav behavior to an element that contains multiple href/data-href elements.
+</p>
+
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;nav data-behavior="ajax-nav" data-nav-target="#view"&gt;
+   &lt;a href="views/my-view.html" /&gt;
+   &lt;a href="views/my-other-view.html" /&gt;
+&lt;/nav&gt;
+
+&lt;div id="view" data-behavior="ajax-frame"&gt;&lt;/div&gt;
+   </pre>
+</code>
