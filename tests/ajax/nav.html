@@ -37,19 +37,42 @@
          container.setAttribute('data-behavior', 'ajax-nav');;
          container.setAttribute('data-href', 'test');
          data.responseText = '<div id="test"></div>';
-         container.addEventListener(behaviors.ajax.form.events.success, function(e) {data.response = e.detail;});
+         container.addEventListener(behaviors.ajax.form.events.success, function(e) {
+            data.response = e.detail;});
          document.body.appendChild(container);
 
          setTimeout(function() {
             behaviors.extensions.trigger(container, 'click');
 
             setTimeout(function() {
-               QUnit.test('Tests', function(assert) {
+               QUnit.test('Single', function(assert) {
                   assert.ok(data.response.response === '<div id="test"></div>', 'Triggered');
                });
+
+               setTimeout(function() {
+                  document.body.removeChild(container);
+                  container = document.createElement('div');
+                  container.setAttribute('data-behavior', 'ajax-nav');
+                  var item = document.createElement('div');
+                  item.setAttribute('data-href', 'test');
+                  container.appendChild(item);
+                  item.addEventListener(behaviors.ajax.form.events.success, function(e) {
+                     data.response = e.detail;});
+                  data.response = false;
+                  document.body.appendChild(container);
+
+                  setTimeout(function() {
+                     behaviors.extensions.trigger(item, 'click');
+
+                     setTimeout(function() {
+                        QUnit.test('Child', function(assert) {
+                           assert.ok(data.response.response === '<div id="test"></div>', 'Triggered');
+                        })
+                     })
+                  })
+               }, 100);
             });
          });
-
       </script>
    </body>
 </html>
