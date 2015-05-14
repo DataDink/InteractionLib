@@ -142,7 +142,9 @@ aside > nav > a:active {
   padding: 5px 25px;
   margin: 0px;
 }
-aside > nav > a:hover {
+aside > nav > a:hover,
+aside > nav > a:active,
+aside > nav > a:focus {
   background: #d6d8d3;
 }
 body > header > form {

@@ -1,0 +1,53 @@
+<header>Attributes</header>
+<dl>
+   <dt>action</dt>            <dd>&nbsp;</dd>
+   <dt>data-action</dt>       <dd>The request uri</dd>
+   <dt>method</dt>            <dd>&nbsp;</dd>
+   <dt>data-method</dt>       <dd>The method to be used: get, post, put, delete, patch, etc</dd>
+   <dt>target</dt>            <dd>&nbsp;</dd>
+   <dt>data-target</dt>       <dd>The element that will receive response events</dd>
+</dl>
+
+<header>Events</header>
+<dl>
+   <dt>ajax-before</dt>       <dd>Fires before an ajax request is sent and allows the request to be cancelled and resent</dd>
+   <dt>ajax-success</dt>      <dd>Fires after an ajax request has completed successfully</dd>
+   <dt>ajax-failure</dt>      <dd>Fires after an ajax request has completed unsuccessfully</dd>
+   <dt>ajax-after</dt>     <dd>Fires after and ajax request has completed</dd>
+</dl>
+
+<header>Description</header>
+<p>
+   Responds to <em>submit</em> or <em>ajax-submit</em> events to trigger an ajax form submission.
+</p>
+
+<p>
+   This behavior can be added to a regular form or any other element containing named inputs. The inputs will
+   be serialized and sent with the specified method to the specified action/uri. The serialized input data will
+   be sent as a part of the request uri or in the request body depending on which method verb is used.
+</p>
+
+<p>
+   The result of the request will be sent along with the ajax-success, ajax-failure, and ajax-after events which can
+   be picked up by an ajax-frame or other behavior listening to the specified target element(s).
+</p>
+
+<header>Example</header>
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;form data-behavior="ajax-form"
+         action="http://my-service"
+         method="get"
+         target="#frame"&gt;
+
+         &lt;input type="search" name="query" /&gt;
+         &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;div  data-behavior="ajax-frame"
+         id="frame"&gt;
+         Enter your search to see results...
+&lt;/div&gt;
+   </pre>
+</code>
