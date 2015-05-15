@@ -13,21 +13,11 @@ window.behaviors.add('ajax-nav', function() {
          var uri = link.getAttribute('href') || link.getAttribute('data-href');
          var targetSelector = container.getAttribute('target') || container.getAttribute('data-nav-target');
          var targets = (!targetSelector) ? [link] : container.contextSelector(targetSelector);
-         var request = new window.behaviors.extensions.ajax();
-         request.uri = uri;
-         request.onsuccess = function() {
-            var submit = window.behaviors.ajax.form.events.success;
-            var response = {
-               form: link, method: 'get', uri: request.uri,
-               status: this.status,
-               type: this.responseType,
-               response: this.responseText
-            };
-            for (var i = 0; i < targets.length; i++) {
-               window.behaviors.extensions.trigger(targets[i], submit, response);
-            }
-         };
-         request.send();
+         var ajax = new window.behaviors.extensions.ajax();
+         ajax.send('get', uri, {}, function() {
+            var response = new window.behaviors.ajax.event(this, link);
+            window.behaviors.extensions.trigger(targets, window.behaviors.ajax.form.events.success, response);
+         });
          return false;
       };})(links[i]));
    }
