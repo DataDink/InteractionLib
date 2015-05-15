@@ -335,38 +335,61 @@ setEventingPolyfills(window);
 
 window.behaviors.extensions.ajax = function() {
    var instance = this;
-   instance.method = 'get';
-   instance.uri = '';
-   instance.data = {};
+   instance.send = function(method, uri, data, success, error, callback) {
+      var request = new window.behaviors.extensions.ajax.request(method, uri, data);
+      request.send(function(ajax) {
+         var succeeded = this.status >= 200 && this.status < 300 || this.status === 304;
+         if (succeeded && success) { success.call(this); }
+         if (!succeeded && error) { error.call(this); }
+         if (callback) { callback.call(this); }
+      });
+   }
+};
 
-   instance.onerror = function() {};
-   instance.onsuccess = function() {};
-   instance.oncomplete = function() {};
+window.behaviors.extensions.ajax.request = function(method, uri, data) {
+   var instance = this;
+   instance.method = method;
+   instance.uri = uri;
+   instance.data = data;
 
-   instance.send = function() {
-      var request = (!window.XMLHttpRequest) ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
-      var verb = (instance.method || 'get').toLowerCase();
+   instance.send = function(callback) {
+      var verb = (method || 'get').toLowerCase();
       var usebody = (verb === 'post' || verb === 'put' || verb === 'patch' || verb === 'update');
-      var query = !instance.data ? '' : window.behaviors.extensions.toquery(instance.data);
-      var uri = usebody ? instance.uri : window.behaviors.extensions.appendquery(instance.uri, query);
+      var request = {
+         method: instance.method,
+         uri: instance.uri,
+         data: instance.data || {},
+         query: !instance.data ? '' : window.behaviors.extensions.toquery(instance.data)
+      }
+      request.requestUri = usebody ? request.uri : window.behaviors.extensions.appendquery(request.uri, request.query);
 
-      request.open(verb, uri, true);
-      request.onreadystatechange = (function(request) { return function() {
-         if (request.readyState !== 4) { return; }
-         var isSuccess = request.status >= 200 && request.status < 300 || request.status === 304;
-         if (isSuccess && instance.onsuccess) { instance.onsuccess.call(request); }
-         if (!isSuccess && instance.onerror) { instance.onerror.call(request); }
-         if (instance.oncomplete) { instance.oncomplete.call(request); }
-      };})(request);
-      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      var ajax = (!window.XMLHttpRequest) ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
+      ajax.open(request.method, request.requestUri, true);
+      ajax.onreadystatechange = (function(ajax) { return function() {
+         if (ajax.readyState !== 4) { return; }
+         var response = new window.behaviors.extensions.ajax.response(request, ajax);
+         callback.call(response, ajax);
+      };})(ajax);
+      ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       if (usebody) {
-         request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-         request.send(query);
+         ajax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+         ajax.send(request.query);
       } else {
-         request.send();
+         ajax.send();
       }
    }
-}
+};
+
+window.behaviors.extensions.ajax.response = function(request, ajax) {
+   this.uri = request.uri;
+   this.method = request.method;
+   this.data = request.data;
+   this.query = request.query;
+   this.requestUri = request.requestUri;
+   this.status = ajax.status;
+   this.type = ajax.responseType;
+   this.response = ajax.responseText;
+};
 ;
 
 window.behaviors.extensions.appendquery = function(uri, query) {
@@ -559,6 +582,18 @@ window.behaviors.extensions.values = function(input) {
          after: 'ajax-after'
       }
    };
+   window.behaviors.ajax.event = function(response, element) {
+      var event = this;
+      event.action = response.uri;
+      event.method = response.method;
+      event.data = response.data;
+      event.query = response.query;
+      event.status = response.status;
+      event.type = response.type;
+      event.response = response.response;
+      event.form = element;
+   };
+
    window.behaviors.add('ajax-form', function() {
       this.addEventListener('submit', send, false);
       this.addEventListener(window.behaviors.ajax.submit.events.submit, send, false);
@@ -572,30 +607,32 @@ window.behaviors.extensions.values = function(input) {
       var targetSelector = form.getAttribute('target') || form.getAttribute(window.behaviors.ajax.form.attributes.target);
       var targets = (!targetSelector) ? [form] : form.contextSelector(targetSelector);
 
-      var request = new window.behaviors.extensions.ajax();
-      request.uri = form.getAttribute('action') || form.getAttribute(window.behaviors.ajax.form.attributes.action);
-      request.method = (form.getAttribute('method') || form.getAttribute(window.behaviors.ajax.form.attributes.method) || 'POST');
-      request.data = window.behaviors.extensions.serialize(form);
-      request.query = window.behaviors.extensions.toquery(request.data);
+      var method = (form.getAttribute('method') || form.getAttribute(window.behaviors.ajax.form.attributes.method) || 'POST');
+      var uri = form.getAttribute('action') || form.getAttribute(window.behaviors.ajax.form.attributes.action);
+      var data = window.behaviors.extensions.serialize(form);
+      var ajax = new window.behaviors.extensions.ajax();
 
       function sendEvent(response, event) {
-         window.behaviors.extensions.trigger(targets, event, {
-            form: form, action: request.uri, query: request.query, method: request.method,
-            status: response.status,
-            type: response.responseType,
-            response: response.responseText
-         });
+         var detail = new window.behaviors.ajax.event(response, form);
+         window.behaviors.extensions.trigger(targets, event, detail);
       }
+      var send = function() { ajax.send(method, uri, data,
+         function(e) { sendEvent(this, window.behaviors.ajax.form.events.success); },
+         function(e) { sendEvent(this, window.behaviors.ajax.form.events.failure); },
+         function(e) { sendEvent(this, window.behaviors.ajax.form.events.after); }
+      );}
 
-      request.onerror = function() { sendEvent(this, window.behaviors.ajax.form.events.failure); };
-      request.onsuccess = function() { sendEvent(this, window.behaviors.ajax.form.events.success); };
-      request.oncomplete = function() { sendEvent(this, window.behaviors.ajax.form.events.after); };
+      var presubmit = new window.behaviors.ajax.event(
+         {uri: uri, method: method, data: data, query: window.behaviors.extensions.toquery(data)},
+         form
+      );
+      presubmit.cancel = false;
+      presubmit.resubmit = send;
 
-      var presubmit = { form: form, action: request.uri, query: request.query, method: request.method, cancel: false, resubmit: request.send };
       window.behaviors.extensions.trigger(targets, window.behaviors.ajax.form.events.before, presubmit);
       if (presubmit.cancel === true) { return; }
 
-      request.send();
+      send();
       return false;
    }
 })();
@@ -676,21 +713,11 @@ window.behaviors.add('ajax-nav', function() {
          var uri = link.getAttribute('href') || link.getAttribute('data-href');
          var targetSelector = container.getAttribute('target') || container.getAttribute('data-nav-target');
          var targets = (!targetSelector) ? [link] : container.contextSelector(targetSelector);
-         var request = new window.behaviors.extensions.ajax();
-         request.uri = uri;
-         request.onsuccess = function() {
-            var submit = window.behaviors.ajax.form.events.success;
-            var response = {
-               form: link, method: 'get', uri: request.uri,
-               status: this.status,
-               type: this.responseType,
-               response: this.responseText
-            };
-            for (var i = 0; i < targets.length; i++) {
-               window.behaviors.extensions.trigger(targets[i], submit, response);
-            }
-         };
-         request.send();
+         var ajax = new window.behaviors.extensions.ajax();
+         ajax.send('get', uri, {}, function() {
+            var response = new window.behaviors.ajax.event(this, link);
+            window.behaviors.extensions.trigger(targets, window.behaviors.ajax.form.events.success, response);
+         });
          return false;
       };})(links[i]));
    }
@@ -728,11 +755,9 @@ window.behaviors.add('ajax-submit', function() {
 
 window.behaviors.add('ajax-view', function() {
    var container = this;
-   var request = new window.behaviors.extensions.ajax();
-   request.uri = container.getAttribute('href') || container.getAttribute('data-href');
-   if (!request.uri) { return; }
-   request.onsuccess = function() {
-      container.innerHTML = this.responseText;
-   };
-   request.send();
+   var uri = container.getAttribute('href') || container.getAttribute('data-href');
+   var ajax = new window.behaviors.extensions.ajax();
+   ajax.send('get', uri, {}, function() {
+      container.innerHTML = this.response;
+   });
 })
