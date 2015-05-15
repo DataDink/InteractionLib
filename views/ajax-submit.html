@@ -1,0 +1,42 @@
+<header>Attributes</header>
+<dl>
+   <dt>data-ajax-listen</dt>        <dd>A <em>Context Selector</em> pointing to the element(s) to listen for events on</dd>
+   <dt>data-ajax-target</dt>        <dd>A <em>Context Selector</em> pointing to the element(s) that <em>ajax-submit</em> events will be sent to</dd>
+   <dt>data-ajax-events</dt>        <dd>The events that will trigger an <em>ajax-submit</em></dd>
+</dl>
+
+<header>Events</header>
+<dl>
+   <dt>ajax-submit</dt>             <dd>Triggered by the events specified by the <em>data-ajax-events</em> attribute</dd>
+</dl>
+
+<header>Description</header>
+<p>
+   Responds to events specifed by the <em>data-ajax-events</em> attribute to trigger an <em>ajax-submit</em> event.
+</p>
+
+<p>
+   This behavior is used to trigger the sending of an <em>ajax-form</em>.
+</p>
+
+<header>Example</header>
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;form data-behavior="ajax-form"
+         action="http://my-service"
+         method="get"
+         target="#frame"&gt;
+
+         &lt;input type="search" name="query"
+                  data-behavior="ajax-submit"
+                  data-ajax-events="keyup" /&gt;
+         &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;div  data-behavior="ajax-frame"
+         id="frame"&gt;
+         Enter your search to see results...
+&lt;/div&gt;
+   </pre>
+</code>

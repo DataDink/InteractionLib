@@ -1,0 +1,44 @@
+<header>Attributes</header>
+<dl>
+   <dt>data-ajax-listen</dt>        <dd>A <em>Context Selector</em> pointing to the element(s) to listen for <em>ajax-success</em> events on</dd>
+   <dt>data-ajax-target</dt>        <dd>A <em>Context Selector</em> pointing to the element(s) that ajax content will be sent to</dd>
+   <dt>data-ajax-mode</dt>          <dd>The method used for placing content</dd>
+</dl>
+
+<header>Modes</header>
+<dl>
+   <dt>FILL</dt>                    <dd>Ajax content will replace all existing content in the target element(s)</dd>
+   <dt>APPEND</dt>                  <dd>Ajax content will be inserted after existing content in the target element(s)</dd>
+   <dt>PREPEND</dt>                 <dd>Ajax content will be inserted before existing content in the target element(s)</dd>
+</dl>
+
+<header>Description</header>
+<p>
+   Responds to <em>ajax-success</em> events to trigger an ajax form submission.
+</p>
+
+<p>
+   This behavior will typically be set on a div or other block element where ajaxed content is expected to be inserted
+   in the document. Any other part of the document responsible for making ajax request <em>(e.g. ajax-form)</em> can
+   send an <em>ajax-success</em> event to the ajax-frame element to have the HTML response content displayed. 
+</p>
+
+<header>Example</header>
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;form data-behavior="ajax-form"
+         action="http://my-service"
+         method="get"
+         target="#frame"&gt;
+
+         &lt;input type="search" name="query" /&gt;
+         &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;div  data-behavior="ajax-frame"
+         id="frame"&gt;
+         Enter your search to see results...
+&lt;/div&gt;
+   </pre>
+</code>
