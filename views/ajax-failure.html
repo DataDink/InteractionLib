@@ -1,0 +1,20 @@
+<header>ajax-failure</header>
+<p>
+   The <em>ajax-failure</em> event is fired after an ajax request has completed with a failed status code.
+</p>
+
+<header>event.detail</header>
+<p>
+   The event object passed to listeners of this custom event will have a detail field on it with
+   the following data
+</p>
+
+<dl>
+   <dt>form</dt>           <dd>The source element associated with the ajax request</dd>
+   <dt>action</dt>         <dd>The ajax request URI</dd>
+   <dt>query</dt>           <dd>The serialized data sent with the ajax request</dd>
+   <dt>method</dt>         <dd>The verb used by the ajax request</dd>
+   <dt>status</dt>         <dd>The numeric response code of the ajax response</dd>
+   <dt>type</dt>           <dd>A string value specifying the type of the response data</dd>
+   <dt>response</dt>       <dd>The response content</dd>
+</dl>
