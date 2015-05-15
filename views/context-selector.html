@@ -1,0 +1,54 @@
+<header>
+   Context Selectors
+</header>
+
+<p>
+   Context Selectors add to regular query selectors the ability to select parents, children, and siblings relative
+   to the element queried from.
+</p>
+
+<header>Example</header>
+
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;section&gt;
+   &lt;article&gt;
+      &lt;div data-target="parent>>section"&gt;&lt;/div&gt;
+   &lt;/article&gt;
+&lt;/section&gt;
+   </pre>
+</code>
+
+<p>
+   In this example the query selector "section" is prepended with "parent>>". This will select the first parent of the
+   div that matches "section".
+</p>
+
+<header>Contexts</header>
+
+<dl>
+   <dt>parent </dt>          <dd>Selects the first matching parent element</dd>
+   <dt>parents </dt>         <dd>Selects all matching parent elements</dd>
+   <dt>child </dt>           <dd>Selects the first matching descendant element</dd>
+   <dt>children </dt>        <dd>Selects all matching descendant elements</dd>
+   <dt>prev </dt>            <dd>Selects the first previous matching sibling element</dd>
+   <dt>prevAll </dt>         <dd>Selects all previous matching sibling elements</dd>
+   <dt>next </dt>            <dd>Selects the first following matching sibling element</dd>
+   <dt>nextAll </dt>         <dd>Selects all following matching sibling elements</dd>
+</dl>
+
+<header>Extension</header>
+
+<p>
+   You can also invoke a Context Selector directly off of any DOM element in your code using the "contextSelector" extension.
+</p>
+
+<header>Example</header>
+
+<code>
+   <header>javascript</header>
+   <pre>
+var outerDiv = document.querySelector('div.inner').contextSelector('parent>>div.outer');
+   </pre>
+</code>

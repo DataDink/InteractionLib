@@ -5,6 +5,7 @@
    <dt>target</dt>            <dd>&nbsp;</dd>
    <dt>data-nav-target</dt>   <dd>A <em>Context Selector</em> refering to the element(s) that will receive the ajax-success event</dd>
    <dt>data-nav-event</dt>    <dd>Specifies the event that will trigger the navigation</dd>
+   <dt>data-nav-route</dt>    <dd>Triggers this navigation based on a hash route</dd>
 </dl>
 
 <header>Events</header>
@@ -24,8 +25,16 @@
    <header>HTML</header>
    <pre>
 &lt;nav&gt;
-   &lt;a data-behavior="ajax-nav" target="#view" href="views/my-view.html" /&gt;
-   &lt;a data-behavior="ajax-nav" target="#view" href="views/my-other-view.html" /&gt;
+   &lt;a data-behavior="ajax-nav"
+         target="#view"
+         href="views/my-view.html"&gt;
+      My View
+   &lt;/a&gt;
+   &lt;a data-behavior="ajax-nav"
+         target="#view"
+         href="views/my-other-view.html"&gt;
+      My Other View
+   &lt;/a&gt;
 &lt;/nav&gt;
 
 &lt;div id="view" data-behavior="ajax-frame"&gt;&lt;/div&gt;
@@ -40,10 +49,36 @@
    <header>HTML</header>
    <pre>
 &lt;nav data-behavior="ajax-nav" data-nav-target="#view"&gt;
-   &lt;a href="views/my-view.html" /&gt;
-   &lt;a href="views/my-other-view.html" /&gt;
+   &lt;a href="views/my-view.html"&gt;My View&lt;/a&gt;
+   &lt;a href="views/my-other-view.html"&gt;My Other View&lt;/a&gt;
 &lt;/nav&gt;
 
 &lt;div id="view" data-behavior="ajax-frame"&gt;&lt;/div&gt;
+   </pre>
+</code>
+
+<p>
+   The <em>data-nav-route</em> attribute will cause a specific navigation item to trigger when there is a matching
+   hash path.
+</p>
+
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;a href="views/my-view.html"
+      data-behavior="ajax-nav"
+      data-nav-target="#view"
+      data-nav-route="/my-view"
+   My view
+&lt;/a&gt;
+   </pre>
+</code>
+
+<code>
+   <header>HTML</header>
+   <pre>
+&lt;nav data-behavior="ajax-nav" data-nav-target="#view"&gt;
+   &lt;a href="views/my-view.html" data-nav-route="/my-view"&gt;My View&lt;/a&gt;
+&lt;nav&gt;
    </pre>
 </code>
