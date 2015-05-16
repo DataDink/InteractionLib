@@ -20,6 +20,12 @@ What it does:
 
 Change Log
 ==========
+2.1.1 : Increased unit test coverage
+
+2.1.1 : Added ajax-view behavior
+
+2.1.1 : Added ajax-nav behavior
+
 2.1 : Hello node world
 
 2.1 : Unit tests - basic coverage (so far)
