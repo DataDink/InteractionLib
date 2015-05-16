@@ -68,8 +68,76 @@
                         QUnit.test('Child', function(assert) {
                            assert.ok(data.response.response === '<div id="test"></div>', 'Triggered');
                         })
-                     })
-                  })
+
+                        setTimeout(function() {
+                           document.body.removeChild(container);
+                           container = document.createElement('a');
+                           container.setAttribute('data-behavior', 'ajax-nav');
+                           container.setAttribute('href', 'test');
+                           container.setAttribute('data-nav-route', '/route');
+                           var triggered = false;
+                           window.location.hash = '/route';
+                           container.addEventListener(behaviors.ajax.form.events.success, function() { triggered = true; });
+                           document.body.appendChild(container);
+
+                           setTimeout(function() {
+                              QUnit.test('Added - Route', function(assert) {
+                                 assert.ok(triggered, 'Triggered');
+                              });
+
+
+                              setTimeout(function() {
+                                 triggered = false;
+                                 window.location.hash = '/bla';
+
+                                 setTimeout(function() {
+                                    QUnit.test('Existing - Unmatched', function(assert) {
+                                       assert.ok(!triggered, 'Untriggered');
+                                    });
+
+                                    setTimeout(function() {
+                                       window.location.hash = '/route';
+
+                                       setTimeout(function() {
+                                          QUnit.test('Existing - Matched', function(assert) {
+                                             assert.ok(triggered, 'Triggered');
+                                          });
+
+                                          triggered = false;
+                                          window.location.hash = '/bla';
+                                          document.body.removeChild(container);
+
+                                          setTimeout(function() {
+                                             window.location.hash = '/route';
+                                             QUnit.test('Removed', function(assert) {
+                                                assert.ok(!triggered, 'Untriggered');
+                                             });
+
+                                             setTimeout(function() {
+                                                triggered = false;
+                                                window.location.hash = '/bla';
+                                                container = document.createElement('a');
+                                                container.setAttribute('data-behavior', 'ajax-nav');
+                                                container.setAttribute('href', 'test');
+                                                container.setAttribute('data-nav-route', '/route');
+                                                container.addEventListener(behaviors.ajax.form.events.success, function() { triggered = true; });
+                                                document.body.appendChild(container);
+
+                                                setTimeout(function() {
+                                                   QUnit.test('Added - Unmatched', function(assert) {
+                                                      assert.ok(!triggered, 'Untriggered');
+                                                   });
+                                                });
+                                             });
+                                          });
+                                       });
+                                    });
+                                 });
+                              });
+                           });
+                        });
+                     });
+                  });
                }, 100);
             });
          });
